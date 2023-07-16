@@ -1,49 +1,137 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { convertDate } from "../redux/projectSlice";
-
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setTaskCompleted, setTaskStatus } from "../redux/projectSlice";
+import { setDateTime } from "../redux/updateCurrentSlice";
 import Column from "./Column";
-import { Box, Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
+import ProjectCard from "./ProjectCard";
 
 function Project() {
+  const dispatch = useDispatch();
   const status = ["Not Started", "In Progress", "Completed"];
+  const currentDateTime = useSelector((state) => state.currentState);
   const projects = useSelector((state) => state.projects);
   const activeProject = projects.find((project) => project.isActive);
   const filterTasks = (status) => {
     return activeProject.tasks.filter((task) => task.status === status);
   };
+  const [alert, setAlert] = useState({
+    type: "",
+    content: "",
+  });
+
+  // update all in active project
+  useEffect(() => {
+    updateAll();
+    const interval = setInterval(() => {
+      updateAll();
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [activeProject]);
+
+  async function updateAll() {
+    try {
+      await updateCurrentTime();
+      await updateTasks(activeProject.tasks);
+      await updateProject();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // 1. update current time
+  const updateCurrentTime = () => {
+    return new Promise((resolve) => {
+      dispatch(setDateTime());
+      resolve();
+    });
+  };
+
+  // 2. update tasks, subtasks
+  const isAllSubtasksCompleted = (subtasks) => {
+    let isCompleted = true;
+    (subtasks || []).forEach((subtask) => {
+      if (!subtask.isCompleted) isCompleted = false;
+    });
+    return isCompleted;
+  };
+
+  const checkTaskStatus = (task, index) => {
+    let currDate = new Date(currentDateTime.datetime.slice(0, 10));
+    let start = new Date(task["start-date"]);
+    if (currDate < start) {
+      dispatch(setTaskStatus({ index, newStatus: "Not Started" }));
+    } else {
+      dispatch(setTaskStatus({ index, newStatus: "In Progress" }));
+    }
+  };
+
+  const updateTasks = (tasks) => {
+    return new Promise((resolve) => {
+      (tasks || []).forEach((task, index) => {
+        if (task.subtasks.length > 0) {
+          if (isAllSubtasksCompleted(task.subtasks) && !task.isCompleted) {
+            dispatch(setTaskCompleted(index));
+            dispatch(setTaskStatus({ index, newStatus: "Completed" }));
+          } else if (
+            !isAllSubtasksCompleted(task.subtasks) &&
+            task.isCompleted
+          ) {
+            dispatch(setTaskCompleted(index));
+            checkTaskStatus(task, index);
+          } else if (
+            !isAllSubtasksCompleted(task.subtasks) &&
+            !task.isCompleted
+          ) {
+            checkTaskStatus(task, index);
+          }
+        } else {
+          if (task.isCompleted && task.status !== "Completed") {
+            dispatch(setTaskStatus({ index, newStatus: "Completed" }));
+          } else if (!task.isCompleted) {
+            checkTaskStatus(task, index);
+          }
+        }
+      });
+
+      resolve();
+    });
+  };
+
+  // 3. update project
+  const isCompletedProject = () => {
+    if (activeProject.tasks.length === 0) return false;
+    let isCompleted = true;
+    activeProject.tasks.forEach((task) => {
+      if (!task.isCompleted) isCompleted = false;
+    });
+    return isCompleted;
+  };
+
+  const updateProject = () => {
+    return new Promise((resolve) => {
+      let currDateTime = new Date(currentDateTime.datetime);
+      let currDate = new Date(currentDateTime.datetime.slice(0, 10));
+      let end = new Date(activeProject["end-date"]);
+      let deadline = new Date(
+        activeProject.deadlineDate + " " + activeProject.deadlineTime
+      );
+      // console.log(end, currDate, currDateTime, deadline);
+      if (isCompletedProject(activeProject))
+        setAlert({ type: "success", content: "This project is completed!" });
+      else if (end <= currDate && currDateTime < deadline)
+        setAlert({ type: "warning", content: "The deadline is coming!" });
+      else if (currDateTime >= deadline)
+        setAlert({ type: "error", content: "It's overdue!" });
+      else setAlert(null);
+      resolve();
+    });
+  };
 
   return (
-    <div
-      style={{
-        marginLeft: "150px",
-      }}
-    >
-      <Box sx={{ padding: "100px 0 50px 200px" }}>
-        <Typography>Description: {activeProject.description}</Typography>
-        <Typography>
-          Deadline:{" "}
-          {activeProject.deadlineTime +
-            " " +
-            convertDate(activeProject.deadlineDate)}
-        </Typography>
+    <div>
+      <ProjectCard project={activeProject} alert={alert} />
 
-        <Typography>
-          Start: {convertDate(activeProject["start-date"])}
-        </Typography>
-        <Typography>
-          Finish: {convertDate(activeProject["end-date"])}
-        </Typography>
-        {/* <Typography>
-          Completed: <Checkbox checked={currentTheme === "#ABD5AB"} />
-        </Typography> */}
-        {/* {currentTheme === "#F28B88" && (
-          <Stack spacing={2} direction="row">
-            <Button variant="outlined">Set new deadline</Button>
-            <Button variant="outlined">Delete Project</Button>
-          </Stack>
-        )} */}
-      </Box>
       <Grid sx={{ flexGrow: 1 }} container spacing={45}>
         <Grid item xs={12}>
           <Grid
