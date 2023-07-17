@@ -9,7 +9,6 @@ import ProjectCard from "./ProjectCard";
 function Project() {
   const dispatch = useDispatch();
   const status = ["Not Started", "In Progress", "Completed"];
-  const currentDateTime = useSelector((state) => state.currentState);
   const projects = useSelector((state) => state.projects);
   const activeProject = projects.find((project) => project.isActive);
   const filterTasks = (status) => {
@@ -31,9 +30,9 @@ function Project() {
 
   async function updateAll() {
     try {
-      await updateCurrentTime();
-      await updateTasks(activeProject.tasks);
-      await updateProject();
+      const currentDateTime = await updateCurrentTime();
+      await updateTasks(activeProject.tasks, currentDateTime);
+      await updateProject(currentDateTime);
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +42,7 @@ function Project() {
   const updateCurrentTime = () => {
     return new Promise((resolve) => {
       dispatch(setDateTime());
-      resolve();
+      resolve(new Date().toISOString());
     });
   };
 
@@ -56,8 +55,8 @@ function Project() {
     return isCompleted;
   };
 
-  const checkTaskStatus = (task, index) => {
-    let currDate = new Date(currentDateTime.datetime.slice(0, 10));
+  const checkTaskStatus = (task, index, currentDateTime) => {
+    let currDate = new Date(currentDateTime.slice(0, 10));
     let start = new Date(task["start-date"]);
     if (currDate < start) {
       dispatch(setTaskStatus({ index, newStatus: "Not Started" }));
@@ -66,7 +65,7 @@ function Project() {
     }
   };
 
-  const updateTasks = (tasks) => {
+  const updateTasks = (tasks, currentDateTime) => {
     return new Promise((resolve) => {
       (tasks || []).forEach((task, index) => {
         if (task.subtasks.length > 0) {
@@ -78,18 +77,18 @@ function Project() {
             task.isCompleted
           ) {
             dispatch(setTaskCompleted(index));
-            checkTaskStatus(task, index);
+            checkTaskStatus(task, index, currentDateTime);
           } else if (
             !isAllSubtasksCompleted(task.subtasks) &&
             !task.isCompleted
           ) {
-            checkTaskStatus(task, index);
+            checkTaskStatus(task, index, currentDateTime);
           }
         } else {
           if (task.isCompleted && task.status !== "Completed") {
             dispatch(setTaskStatus({ index, newStatus: "Completed" }));
           } else if (!task.isCompleted) {
-            checkTaskStatus(task, index);
+            checkTaskStatus(task, index, currentDateTime);
           }
         }
       });
@@ -108,10 +107,11 @@ function Project() {
     return isCompleted;
   };
 
-  const updateProject = () => {
+  const updateProject = (currentDateTime) => {
     return new Promise((resolve) => {
-      let currDateTime = new Date(currentDateTime.datetime);
-      let currDate = new Date(currentDateTime.datetime.slice(0, 10));
+      // const currentDateTime = useSelector((state) => state.currentState);
+      let currDateTime = new Date(currentDateTime);
+      let currDate = new Date(currentDateTime.slice(0, 10));
       let end = new Date(activeProject["end-date"]);
       let deadline = new Date(
         activeProject.deadlineDate + " " + activeProject.deadlineTime
