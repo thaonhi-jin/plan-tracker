@@ -1,0 +1,222 @@
+{
+    "projects": [
+        {
+            "title": "Project1",
+            "description": "sem, consequat nec, mollis",
+            "isActive": false,
+            "deadlineTime": "02:40",
+            "deadlineDate": "2023-10-10",
+            "start-date": "2023-04-04",
+            "end-date": "2023-05-09",
+
+            "tasks": [
+                {
+                    "name": "Task1",
+                    "start-date": "2023-04-28",
+                    "end-date": "2023-05-09",
+                    "status": "Not Started",
+                    "isCompleted":false,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ultrices LLC",
+                            "isCompleted": false
+                            
+                        },
+                        {
+                            "id" : 1,
+                            "name": "Fermentum Inc.",
+                            "isCompleted": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Task2",
+                    "start-date": "2023-04-29",
+                    "end-date": "2023-05-08",
+                    "status": "In Progress",
+                    "isCompleted":false,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ut Limited",
+                            "isCompleted": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Project2",
+            "description": "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec dignissim",
+            "isActive": false,
+            "deadlineTime": "13:40",
+            "deadlineDate": "2023-12-17",
+            "start-date": "2023-05-29",
+            "end-date": "2023-10-09",
+            "tasks": [
+                {
+                    "name": "Task1",
+                    "start-date": "2023-06-26",
+                    "end-date": "2023-09-20",
+                    "status": "Completed",
+                    "isCompleted":true,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ultrices LLC",
+                            "isCompleted": true
+                        },
+                        {
+                            "id" : 1,
+                            "name": "Fermentum Inc.",
+                            "isCompleted": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Task2",
+                    "start-date": "2023-06-22",
+                    "end-date": "2023-07-20",
+                    "status": "Completed",
+                    "isCompleted":true,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ut Limited",
+                            "isCompleted": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Project3",
+            "description": "Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent interdum ligula",
+            "isActive": false,
+            "deadlineTime": "17:15",
+            "deadlineDate": "2023-07-13",
+            "start-date": "2023-06-12",
+            "end-date": "2023-07-12",
+            "tasks": [
+                {
+                    "name": "Task1",
+                    "start-date": "2023-06-20",
+                    "end-date": "2023-06-22",
+                    "status": "In Progress",
+                    "isCompleted":false,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ultrices LLC",
+                            "isCompleted": false
+                        },
+                        {
+                            "id" : 1,
+                            "name": "Fermentum Inc.",
+                            "isCompleted": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Task2",
+                    "start-date": "2023-06-22",
+                    "end-date": "2023-06-27",
+                    "status": "Completed",
+                    "isCompleted":true,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ut Limited",
+                            "isCompleted": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Project4",
+            "description": "metus. Vivamus euismod urna. Nullam lobortis quam a felis ullamcorper",
+            "isActive": false,
+            "deadlineTime": "10:40",
+            "deadlineDate": "2023-11-17",
+            "start-date": "2023-06-29",
+            "end-date": "2023-10-09",
+            "tasks": [
+                {
+                    "name": "Task1",
+                    "start-date": "2023-07-20",
+                    "end-date": "2023-08-20",
+                    "status": "Not Started",
+                    "isCompleted":false,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ultrices LLC",
+                            "isCompleted": false
+                        },
+                        {
+                            "id" : 1,
+                            "name": "Fermentum Inc.",
+                            "isCompleted": false
+                        }
+                    ]
+                },
+                {
+                    "name": "Task2",
+                    "start-date": "2023-07-20",
+                    "end-date": "2023-07-20",
+                    "status": "Not Started",
+                    "isCompleted":false,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ut Limited",
+                            "isCompleted": false
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Project5",
+            "description": "Phasellus dapibus quam quis diam. Pellentesque habitant morbi tristique senectus",
+            "isActive": false,
+            "deadlineTime": "14:40",
+            "deadlineDate": "2023-09-09",
+            "start-date": "2023-09-01",
+            "end-date": "2023-09-08",
+            "tasks": [
+                {
+                    "name": "Task1",
+                    "start-date": "2023-09-01",
+                    "end-date": "2023-09-02",
+                    "status": "Completed",
+                    "isCompleted":true,
+                    "subtasks": [
+                        {
+                            "id" : 0,
+                            "name": "Ultrices LLC",
+                            "isCompleted": true
+                        },
+                        {
+                            "id" : 1,
+                            "name": "Fermentum Inc.",
+                            "isCompleted": true
+                        }
+                    ]
+                },
+                {
+                    "name": "Task2",
+                    "start-date": "2023-09-05",
+                    "end-date": "2023-09-07",
+                    "status": "Not Started",
+                    "isCompleted":false,
+                    "subtasks": [
+                        
+                    ]
+                }
+            ]
+        }
+    ]
+}

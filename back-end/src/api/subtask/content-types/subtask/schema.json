@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subtasks",
+  "info": {
+    "singularName": "subtask",
+    "pluralName": "subtasks",
+    "displayName": "Subtask",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false
+    },
+    "task": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::task.task",
+      "inversedBy": "subtasks"
+    }
+  }
+}
