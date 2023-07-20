@@ -22,10 +22,10 @@ function Project() {
   // update all in active project
   useEffect(() => {
     updateAll();
-    const interval = setInterval(() => {
-      updateAll();
-    }, 1000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   updateAll();
+    // }, 1000);
+    // return () => clearInterval(interval);
   }, [activeProject]);
 
   async function updateAll() {

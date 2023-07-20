@@ -1,37 +1,54 @@
-import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-
-const PROJECTS = gql`
-  query GetProjects {
-    project {
-      id
-      title
-      isActive
-      deadline
-      startDate
-      endDate
-    }
-  }
-`;
+// import useFetch from "./useFetch";
+import { readProjects, createProject } from "./crud";
 
 function StrapiDemo() {
-  const { loading, error, data } = useQuery(PROJECTS);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error</p>;
-  console.log(data);
+  const [data, setData] = useState([]);
+  // const { loading, error, data } = useFetch(
+  //   "http://localhost:1337/api/projects"
+  // );
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error</p>;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await readProjects("http://localhost:1337/api/projects");
+      console.log(result.data.data);
+      setData(result.data.data);
+    };
+
+    fetchData();
+  }, []);
+
+  const createFunc = async () => {
+    try {
+      const result = await createProject("http://localhost:1337/api/projects", {
+        data: {
+          title: "Project6",
+          description: "this is a project",
+        },
+      });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createFunc();
+
   return (
     <div>
-      {data.project.map((project) => {
+      {data.map((project) => (
         <Box key={project.id}>
           <Typography>{project.id}</Typography>
-          <Typography>{project.title}</Typography>
-          <Typography>{project.isActive}</Typography>
-          <Typography>{project.deadline}</Typography>
-          <Typography>{project.startDate}</Typography>
-          <Typography>{project.endDate}</Typography>
-        </Box>;
-      })}
+          <Typography>{project.attributes.title}</Typography>
+          <Typography>{project.attributes.isActive}</Typography>
+          <Typography>{project.attributes.deadline}</Typography>
+          <Typography>{project.attributes.startDate}</Typography>
+          <Typography>{project.attributes.endDate}</Typography>
+        </Box>
+      ))}
     </div>
   );
 }
