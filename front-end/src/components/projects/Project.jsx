@@ -9,6 +9,7 @@ function Project() {
   const dispatch = useDispatch();
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
+  const updateTasksNoti = useSelector((state) => state.cache.updateTasks);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,7 @@ function Project() {
       try {
         const res = await readData(url);
         dispatch(updateActiveTasks(res.data.data));
+        console.log("here3");
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -25,7 +27,7 @@ function Project() {
     };
 
     fetchData();
-  }, [activeProject]);
+  }, [updateTasksNoti, activeProject]);
 
   if (loading) return <p>Loading...</p>;
   return (

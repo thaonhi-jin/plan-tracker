@@ -35,7 +35,18 @@ export const addProject = (newProject) => {
             ...newProject
         }
     }
-    console.log(data)
+
     axios.post("http://localhost:1337/api/projects", data)
         .catch(err => console.log(err))
+}
+
+export const addTask = (newTask) => {
+    let data = {
+        "data": {
+            ...newTask,
+            isCompleted: false
+        }
+    }
+
+    return axios.post("http://localhost:1337/api/tasks", data)
 }
