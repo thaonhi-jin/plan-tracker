@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Paper,
@@ -12,8 +12,23 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ScheduleIcon from "@mui/icons-material/Schedule";
+import DeleteTask from "../../modals/DeleteTask";
+import EditTask from "../../modals/EditTask";
 
 function TaskCard({ task }) {
+  const [openDel, setOpenDel] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  // edit-task modal
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  // open delete-task modal
+  const handleOpenDel = () => {
+    setOpenDel(true);
+  };
+
   // settings for Task
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -73,19 +88,36 @@ function TaskCard({ task }) {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        <MenuItem>
+        <MenuItem onClick={() => handleOpenEdit()}>
           <Typography textAlign="center">Edit Task</Typography>
         </MenuItem>
 
-        <MenuItem>
+        <MenuItem onClick={() => handleOpenDel()}>
           <Typography textAlign="center" color="error">
             Delete Task
           </Typography>
         </MenuItem>
 
         {/* Edit Task Modal */}
+        {openEdit && (
+          <EditTask
+            openEdit={openEdit}
+            setOpenEdit={setOpenEdit}
+            setAnchorElUser={setAnchorElUser}
+            task={task}
+          />
+        )}
 
         {/* Delete Task Modal */}
+        {openDel && (
+          <DeleteTask
+            openDel={openDel}
+            setOpenDel={setOpenDel}
+            setAnchorElUser={setAnchorElUser}
+            taskName={task.attributes.name}
+            taskID={task.id}
+          />
+        )}
       </Menu>
 
       <Box

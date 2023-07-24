@@ -12,7 +12,7 @@ import {
   Chip,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import { setUpdateTasksNoti } from "../redux/cacheSlice";
+import { addTask } from "../redux/cacheSlice";
 
 function AddTask({ openAddTask, setOpenAddTask, projectID }) {
   const [newTask, setNewTask] = useState({});
@@ -53,7 +53,11 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
         axios
           .put(`http://localhost:1337/api/tasks/${res.data.data.id}`, relation)
           .then(() => {
-            dispatch(setUpdateTasksNoti());
+            dispatch(addTask(res.data.data));
+          })
+          .then(() => {
+            setNewTask({});
+            setOpenAddTask(false);
           })
           .catch((err) => console.log(err));
       })
@@ -140,7 +144,6 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
         <Button
           onClick={() => {
             handleAddTask();
-            handleCloseAddTask();
           }}
         >
           Create

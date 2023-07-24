@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import axios from 'axios'
 import { useDispatch, useSelector } from "react-redux";
 import { updateInfoList, setProjectActive } from './redux/cacheSlice';
 import { readData, url } from './data/CRUD'
@@ -17,8 +16,10 @@ function App() {
   console.log("here1")
 
   useEffect(() => {
-    if (!activeProject && infoProjects.length > 0)
+    if (!activeProject && infoProjects.length > 0) {
+      console.log("set active at 0")
       dispatch(setProjectActive(infoProjects[0].id));
+    }
   })
 
 

@@ -15,7 +15,7 @@ function Tasks() {
   const handleOpenAddTask = () => {
     setOpenAddTask(true);
   };
-  console.log(activeTasks);
+  // console.log(activeTasks);
   return (
     <>
       <Box

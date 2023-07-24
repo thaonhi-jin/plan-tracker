@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import {
   Box,
@@ -10,8 +11,7 @@ import {
   DialogTitle,
   Stack,
 } from "@mui/material";
-import { setUpdateNoti } from "../redux/cacheSlice";
-import { addProject } from "../data/CRUD";
+import { addInfoProject } from "../redux/cacheSlice";
 
 function AddProject({ openAdd, setOpenAdd }) {
   const [newProject, setNewProject] = useState({});
@@ -24,13 +24,23 @@ function AddProject({ openAdd, setOpenAdd }) {
     });
   };
 
-  const handleAddProject = async () => {
-    try {
-      addProject(newProject);
-      dispatch(setUpdateNoti());
-    } catch (err) {
-      console.log(err);
-    }
+  const handleAddProject = () => {
+    let data = {
+      data: {
+        ...newProject,
+      },
+    };
+
+    axios
+      .post("http://localhost:1337/api/projects", data)
+      .then((res) => {
+        dispatch(addInfoProject(res.data.data));
+      })
+      .then(() => {
+        setNewProject({});
+        setOpenAdd(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleCloseAdd = () => {
@@ -128,7 +138,6 @@ function AddProject({ openAdd, setOpenAdd }) {
         <Button
           onClick={() => {
             handleAddProject();
-            handleCloseAdd();
           }}
         >
           Create

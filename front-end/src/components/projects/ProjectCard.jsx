@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardActions,
@@ -14,10 +14,24 @@ import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import { useSelector } from "react-redux";
+import DeleteProject from "../../modals/DeleteProject";
+import EditProject from "../../modals/EditProject";
 
 function ProjectCard() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
+  const [openDel, setOpenDel] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  // edit project modal
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  // delete project modal
+  const handleOpenDel = () => {
+    setOpenDel(true);
+  };
 
   return (
     <Card
@@ -130,6 +144,7 @@ function ProjectCard() {
           size="small"
           startIcon={<EditIcon />}
           sx={{ backgroundColor: "#0DA2FF" }}
+          onClick={() => handleOpenEdit()}
         >
           Edit
         </Button>
@@ -138,9 +153,27 @@ function ProjectCard() {
           size="small"
           startIcon={<DeleteIcon />}
           sx={{ color: "#0DA2FF" }}
+          onClick={() => handleOpenDel()}
         >
           Delete
         </Button>
+
+        {openEdit && (
+          <EditProject
+            activeProject={activeProject}
+            openEdit={openEdit}
+            setOpenEdit={setOpenEdit}
+          />
+        )}
+
+        {/* Delete Project Modal */}
+        {openDel && (
+          <DeleteProject
+            openDel={openDel}
+            setOpenDel={setOpenDel}
+            projectTitle={activeProject.attributes.title}
+          />
+        )}
       </CardActions>
     </Card>
   );
