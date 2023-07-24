@@ -9,7 +9,6 @@ function Project() {
   const dispatch = useDispatch();
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
-  const updateTasksNoti = useSelector((state) => state.cache.updateTasks);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +26,7 @@ function Project() {
     };
 
     fetchData();
-  }, [updateTasksNoti, activeProject]);
+  }, [activeProject]);
 
   if (loading) return <p>Loading...</p>;
   return (

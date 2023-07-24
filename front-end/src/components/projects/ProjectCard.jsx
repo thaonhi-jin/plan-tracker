@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardActions,
@@ -16,12 +16,20 @@ import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import { useSelector } from "react-redux";
 import DeleteProject from "../../modals/DeleteProject";
 import EditProject from "../../modals/EditProject";
+import { checkProjectStatus } from "../../redux/methods";
 
 function ProjectCard() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
+  // const updateStatus = useSelector((state) => state.cache.updateStatus);
+  const activeTasks = useSelector((state) => state.cache.activeTasks);
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [status, setStatus] = useState("");
+  console.log("here4");
+  useEffect(() => {
+    setStatus(checkProjectStatus(activeProject, activeTasks));
+  }, [activeProject, activeTasks]);
 
   // edit project modal
   const handleOpenEdit = () => {
@@ -100,9 +108,7 @@ function ProjectCard() {
                 }}
               >
                 <NotificationsIcon sx={{ flexGrow: 1 }} />
-                <Typography sx={{ flexGrow: 2 }}>
-                  Status: In Progress
-                </Typography>
+                <Typography sx={{ flexGrow: 2 }}>Status: {status}</Typography>
               </Box>
             </Grid>
             <Grid item xs={6}>

@@ -12,7 +12,6 @@ function App() {
   const dispatch = useDispatch();
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
-  let updateNoti = useSelector(state => state.cache.update)
   console.log("here1")
 
   useEffect(() => {
@@ -37,7 +36,7 @@ function App() {
     }
 
     fetchData();
-  }, [updateNoti])
+  }, [])
 
   if (loading) return <p>Loading...</p>
   return (

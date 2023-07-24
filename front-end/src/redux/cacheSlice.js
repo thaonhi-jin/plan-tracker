@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const cacheSlice = createSlice({
     name: 'cache',
-    initialState: { infoProjects: [], activeTasks: {}, update: false, updateTasks: false },
+    initialState: { infoProjects: [], activeTasks: {}, updateStatus: false },
     reducers: {
         updateInfoList: (state, action) => {
             let projects = action.payload
             state.infoProjects = (projects || []).map((project) => {
                 return {
                     ...project,
-                    isActive: false
+                    isActive: false,
                 }
             })
         },
@@ -61,16 +61,13 @@ export const cacheSlice = createSlice({
                 return project;
             });
         },
-        setUpdateNoti: (state) => {
-            state.update = !state.update
+        updateStatusNoti: (state) => {
+            state.updateStatus = !state.updateStatus
         },
-        setUpdateTasksNoti: (state) => {
-            state.updateTasks = !state.updateTasks
-        }
     },
 })
 
 
-export const { updateInfoList, addInfoProject, editInfoProject, deleteInfoProject, setProjectActive, updateActiveTasks, addTask, editTask, deleteTask, setUpdateNoti, setUpdateTasksNoti } = cacheSlice.actions
+export const { updateInfoList, addInfoProject, editInfoProject, deleteInfoProject, setProjectActive, updateActiveTasks, addTask, editTask, deleteTask, updateStatusNoti } = cacheSlice.actions
 
 export default cacheSlice.reducer
