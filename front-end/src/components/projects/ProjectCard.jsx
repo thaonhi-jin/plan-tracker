@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Card,
   CardActions,
@@ -13,23 +14,48 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DeleteProject from "../../modals/DeleteProject";
 import EditProject from "../../modals/EditProject";
+import { editInfoProject } from "../../redux/cacheSlice";
 import { checkProjectStatus } from "../../redux/methods";
 
 function ProjectCard() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
-  // const updateStatus = useSelector((state) => state.cache.updateStatus);
   const activeTasks = useSelector((state) => state.cache.activeTasks);
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
+  let updateStatus = checkProjectStatus(
+    activeProject.attributes.startDate,
+    activeProject.attributes.endDate,
+    activeProject.attributes.deadline,
+    activeTasks.tasks
+  );
+
+  // console.log(activeProject);
   console.log("here4");
+
   useEffect(() => {
-    setStatus(checkProjectStatus(activeProject, activeTasks));
-  }, [activeProject, activeTasks]);
+    if (activeProject.attributes.status !== updateStatus) {
+      let updateProject = {
+        data: {
+          ...activeProject.attributes,
+          status: updateStatus,
+        },
+      };
+      axios
+        .put(
+          `http://localhost:1337/api/projects/${activeProject.id}`,
+          updateProject
+        )
+        .then((res) => {
+          dispatch(editInfoProject(res.data.data));
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [updateStatus]);
 
   // edit project modal
   const handleOpenEdit = () => {
@@ -108,7 +134,9 @@ function ProjectCard() {
                 }}
               >
                 <NotificationsIcon sx={{ flexGrow: 1 }} />
-                <Typography sx={{ flexGrow: 2 }}>Status: {status}</Typography>
+                <Typography sx={{ flexGrow: 2 }}>
+                  Status: {activeProject.attributes.status}
+                </Typography>
               </Box>
             </Grid>
             <Grid item xs={6}>

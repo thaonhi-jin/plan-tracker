@@ -10,12 +10,21 @@ import {
   DialogContent,
   DialogTitle,
   Stack,
+  Chip,
 } from "@mui/material";
 import { addInfoProject } from "../redux/cacheSlice";
+import { checkProjectStatus } from "../redux/methods";
 
 function AddProject({ openAdd, setOpenAdd }) {
   const [newProject, setNewProject] = useState({});
   const dispatch = useDispatch();
+
+  // check deadline,startDate, endDate is existed
+  const checkDateExisted = () => {
+    if (newProject.deadline && newProject.startDate && newProject.endDate)
+      return true;
+    return false;
+  };
 
   const handleSetProject = (e) => {
     setNewProject({
@@ -25,9 +34,16 @@ function AddProject({ openAdd, setOpenAdd }) {
   };
 
   const handleAddProject = () => {
+    let status = checkProjectStatus(
+      newProject.startDate,
+      newProject.endDate,
+      newProject.deadline,
+      []
+    );
     let data = {
       data: {
         ...newProject,
+        status: status,
       },
     };
 
@@ -129,6 +145,20 @@ function AddProject({ openAdd, setOpenAdd }) {
                   : ""
               }
               onChange={handleSetProject}
+            />
+
+            <label>Status: </label>
+            <Chip
+              label={
+                checkDateExisted()
+                  ? checkProjectStatus(
+                      newProject.startDate,
+                      newProject.endDate,
+                      newProject.deadline,
+                      []
+                    )
+                  : "Not Started"
+              }
             />
           </Stack>
         </Box>

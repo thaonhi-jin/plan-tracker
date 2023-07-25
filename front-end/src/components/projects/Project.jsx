@@ -10,6 +10,7 @@ function Project() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
   const [loading, setLoading] = useState(true);
+  // console.log("here3_1");
 
   useEffect(() => {
     const fetchData = async () => {

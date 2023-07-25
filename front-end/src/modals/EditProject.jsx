@@ -10,14 +10,16 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { editInfoProject } from "../redux/cacheSlice";
+import { checkProjectStatus } from "../redux/methods";
 
 function EditProject({ activeProject, openEdit, setOpenEdit }) {
   const dispatch = useDispatch();
   const [updateProject, setUpdateProject] = useState({
     ...activeProject.attributes,
   });
+  const activeTasks = useSelector((state) => state.cache.activeTasks);
 
   const handleUpdateChange = (e) => {
     setUpdateProject((prev) => {
@@ -29,9 +31,16 @@ function EditProject({ activeProject, openEdit, setOpenEdit }) {
   };
 
   const handleEditProject = () => {
+    let status = checkProjectStatus(
+      updateProject.startDate,
+      updateProject.endDate,
+      updateProject.deadline,
+      activeTasks.tasks
+    );
     let updateData = {
       data: {
         ...updateProject,
+        status: status,
       },
     };
 

@@ -32,6 +32,9 @@
       "relation": "oneToMany",
       "target": "api::task.task",
       "mappedBy": "project"
+    },
+    "status": {
+      "type": "string"
     }
   }
 }

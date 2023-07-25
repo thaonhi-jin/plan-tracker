@@ -50,3 +50,4 @@ export const addTask = (newTask) => {
 
     return axios.post("http://localhost:1337/api/tasks", data)
 }
+

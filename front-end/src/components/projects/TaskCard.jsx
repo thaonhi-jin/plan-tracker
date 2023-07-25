@@ -27,36 +27,32 @@ function TaskCard({ task }) {
 
   // click checkbox Completed
   const handleClickCompleted = (e) => {
+    var updateState;
     if (e.target.checked) {
-      let updateState = {
+      updateState = {
         data: {
           ...task.attributes,
           status: "Completed",
           isCompleted: true,
         },
       };
-      axios
-        .put(`http://localhost:1337/api/tasks/${task.id}`, updateState)
-        .then((res) => {
-          dispatch(editTask(res.data.data));
-        })
-        .catch((err) => console.log(err));
     } else {
       let status = checkTaskStatus(task);
-      let updateState = {
+      updateState = {
         data: {
           ...task.attributes,
           status: status === "Overdue" ? "In Progress" : status,
           isCompleted: false,
         },
       };
-      axios
-        .put(`http://localhost:1337/api/tasks/${task.id}`, updateState)
-        .then((res) => {
-          dispatch(editTask(res.data.data));
-        })
-        .catch((err) => console.log(err));
     }
+
+    axios
+      .put(`http://localhost:1337/api/tasks/${task.id}`, updateState)
+      .then((res) => {
+        dispatch(editTask(res.data.data));
+      })
+      .catch((err) => console.log(err));
   };
 
   // edit-task modal
