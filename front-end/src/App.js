@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { updateInfoList, setProjectActive } from './redux/cacheSlice';
-import { readData, url } from './data/CRUD'
+import { updateInfoList, setOpenDashboard } from './redux/cacheSlice';
 import Sidebar from "./components/SideBar";
 import Project from "./components/projects/Project";
+import Dashboard from "./components/dashboard/Dashboard";
 import axios from "axios";
 import { checkTaskStatus, checkProjectStatus } from "./redux/methods";
 
@@ -13,13 +13,14 @@ function App() {
   const dispatch = useDispatch();
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const activeProject = infoProjects.find((project) => project.isActive);
+  const openDashboard = useSelector((state) => state.cache.openDashboard)
   console.log("here1")
 
   useEffect(() => {
     // console.log("check active")
     if (!activeProject && infoProjects.length > 0) {
-      // console.log("set active at 0")
-      dispatch(setProjectActive(infoProjects[0].id));
+      // console.log("set open Dashboard")
+      dispatch(setOpenDashboard(true));
     }
   })
 
@@ -52,7 +53,7 @@ function App() {
         if (tasks.length > 0) {
           tasks.forEach(task => {
             let taskStatus = checkTaskStatus(task)
-            if (!task.attributes.isCompleted && task.attributes.status != taskStatus) {
+            if (!task.attributes.isCompleted && task.attributes.status !== taskStatus) {
               let updateTask = {
                 data: {
                   ...task.attributes,
@@ -99,7 +100,7 @@ function App() {
   useEffect(() => {
     updateData()
     var now = new Date();
-    var interval = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 12, 0, 0) - now;
+    var interval = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0) - now;
 
     if (interval < 0) {
       interval += 86400000; // it's after 10am, try 10am tomorrow.
@@ -132,9 +133,10 @@ function App() {
 
   if (loading) return <p>Loading...</p>
   return (
-    <div className="App" style={{ paddingLeft: "250px" }}>
+    <div className="App" style={{ paddingLeft: "250px", boxSizing: "border-box" }}>
       {/* {console.log("here")} */}
       {activeProject && <Project />}
+      {openDashboard && <Dashboard />}
       <Sidebar />
     </div>
   );

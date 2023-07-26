@@ -1,0 +1,38 @@
+.header {
+  /* text-align: center; */
+  width: 100%;
+  margin: 20px 0 40px 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.overview {
+  margin: 20px 30px;
+  width: 100%;
+  display: flex;
+}
+
+.features {
+  flex: 2;
+}
+
+.widgets {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.chart {
+  margin: 40px 0 0 0px;
+}
+
+.notification {
+  flex: 1;
+}
+
+/* Task Lists */
+.task-lists {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
