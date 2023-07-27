@@ -35,9 +35,9 @@ function ProjectCard() {
   );
 
   // console.log(activeProject);
-  console.log("here4");
 
   useEffect(() => {
+    console.log("here4");
     if (activeProject.attributes.status !== updateStatus) {
       let updateProject = {
         data: {

@@ -24,6 +24,7 @@ function TaskCard({ task }) {
   const dispatch = useDispatch();
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  console.log("here6");
 
   // click checkbox Completed
   const handleClickCompleted = (e) => {

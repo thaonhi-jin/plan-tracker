@@ -113,24 +113,6 @@ function App() {
   }, [])
 
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true)
-
-  //     try {
-  //       const res = await readData(url)
-  //       dispatch(updateInfoList(res.data.data))
-  //       console.log("fetch all projects")
-  //       setLoading(false)
-  //     } catch (error) {
-  //       console.log(error)
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, [])
-
   if (loading) return <p>Loading...</p>
   return (
     <div className="App" style={{ paddingLeft: "250px", boxSizing: "border-box" }}>

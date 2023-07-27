@@ -1,296 +1,170 @@
 import React from "react";
-import "./dashboard.css";
-import {
-  Card,
-  Box,
-  Typography,
-  Checkbox,
-  Stack,
-  Paper,
-  IconButton,
-} from "@mui/material";
+import "./styles/dashboard.css";
+import { Box, Typography, Checkbox, Stack, IconButton } from "@mui/material";
 import TimelapseIcon from "@mui/icons-material/Timelapse";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import {
   Timeline,
-  TimelineItem,
   TimelineSeparator,
   TimelineConnector,
   TimelineContent,
   TimelineDot,
 } from "@mui/lab";
+import {
+  BoardSubTitle,
+  BoardTitle,
+  FutureNoti,
+  NotiPaper,
+  OverdueNoti,
+  TaskBoard,
+  WarningNoti,
+  LeftTimeLineItem,
+} from "./styles/taskListStyles";
+import { useSelector } from "react-redux";
+import { checkTaskStatus, daysleftCount } from "../../redux/methods";
 
 function TaskList() {
+  const allTasks = useSelector((state) => state.cache.allTasks);
+  const uncompletedTasks = allTasks.filter(
+    (task) => !task.attributes.isCompleted
+  );
+  const pastTasks = uncompletedTasks.filter(
+    (task) => checkTaskStatus(task) === "Overdue"
+  );
+  const todayTasks = uncompletedTasks.filter(
+    (task) => checkTaskStatus(task) === "In Progress"
+  );
+  const futureTasks = uncompletedTasks.filter(
+    (task) => checkTaskStatus(task) === "Not Started"
+  );
+  console.log(pastTasks, todayTasks, futureTasks);
   return (
     <div className="task-lists">
       {/* Past - Not Completed */}
-      <Card sx={{ width: "350px", height: "420px" }}>
+      <TaskBoard>
         <Box>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "22px",
-              color: "#000",
-              marginTop: "15px",
-            }}
-          >
+          <BoardTitle variant="h6" component="div">
             Past
-          </Typography>
-          <Typography
-            sx={{ fontSize: 15, textAlign: "center" }}
-            color="text.secondary"
-          >
-            You haven't done 5 tasks yet
-          </Typography>
+          </BoardTitle>
+          <BoardSubTitle color="text.secondary">
+            You haven't done {pastTasks.length} tasks yet
+          </BoardSubTitle>
         </Box>
 
         <Stack sx={{ width: "100%" }}>
-          <Paper
-            // variant="outlined"
-            elevation={1}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: "20px 10px",
-              margin: "10px 20px",
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <Checkbox color="success" />
-            </Box>
-            <Box sx={{ flexGrow: 15 }}>
-              <Typography sx={{ fontSize: 16, marginBottom: "5px" }}>
-                Task 0
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: "red",
-                  gap: "3px",
-                }}
-              >
-                <ErrorOutlineIcon fontSize="small" />
-                <Typography sx={{ fontSize: 12 }}>1 day ago</Typography>
+          {(pastTasks || []).map((task) => (
+            <NotiPaper elevation={1} key={task.id}>
+              <Box sx={{ flexGrow: 1 }}>
+                <Checkbox color="success" />
               </Box>
-            </Box>
-            <IconButton>
-              <UpdateIcon />
-            </IconButton>
-
-            <IconButton>
-              <DeleteForeverIcon />
-            </IconButton>
-          </Paper>
-
-          <Paper
-            // variant="outlined"
-            elevation={1}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              padding: "20px 10px",
-              margin: "10px 20px",
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <Checkbox color="success" />
-            </Box>
-            <Box sx={{ flexGrow: 15 }}>
-              <Typography sx={{ fontSize: 16, marginBottom: "5px" }}>
-                Task 0
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  color: "red",
-                  gap: "3px",
-                }}
-              >
-                <ErrorOutlineIcon fontSize="small" />
-                <Typography sx={{ fontSize: 12 }}>1 day ago</Typography>
+              <Box sx={{ flexGrow: 15 }}>
+                <Typography sx={{ fontSize: 16, marginBottom: "5px" }}>
+                  {task.attributes.name}
+                </Typography>
+                <OverdueNoti>
+                  <ErrorOutlineIcon fontSize="small" />
+                  <Typography sx={{ fontSize: 12 }}>
+                    {daysleftCount(task.attributes.endDate)} days ago
+                  </Typography>
+                </OverdueNoti>
               </Box>
-            </Box>
-            <IconButton>
-              <UpdateIcon />
-            </IconButton>
+              <IconButton>
+                <UpdateIcon />
+              </IconButton>
 
-            <IconButton>
-              <DeleteForeverIcon />
-            </IconButton>
-          </Paper>
+              <IconButton>
+                <DeleteForeverIcon />
+              </IconButton>
+            </NotiPaper>
+          ))}
         </Stack>
-      </Card>
+      </TaskBoard>
 
       {/* Today */}
-      <Card sx={{ width: "350px", height: "420px" }}>
+      <TaskBoard>
         <Box>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "22px",
-              color: "#000",
-              marginTop: "15px",
-            }}
-          >
+          <BoardTitle variant="h6" component="div">
             Today
-          </Typography>
-          <Typography
-            sx={{ fontSize: 15, textAlign: "center" }}
-            color="text.secondary"
-          >
-            You have 5 tasks for today
-          </Typography>
+          </BoardTitle>
+          <BoardSubTitle color="text.secondary">
+            You have {todayTasks.length} tasks for today
+          </BoardSubTitle>
         </Box>
 
         <Timeline sx={{ margin: "10px 25px" }}>
-          <TimelineItem sx={{ "&::before": { content: "none" } }}>
-            <TimelineSeparator>
-              <TimelineDot />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ display: "flex" }}>
-              <Box sx={{ flexGrow: 10 }}>
-                <Typography sx={{ fontSize: 16 }}>Task 1</Typography>
-                <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                  End Date: 20 July, 2023
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#ffbf00",
-                  }}
-                >
-                  <TimelapseIcon fontSize="small" />
-                  <Typography sx={{ fontSize: 12 }}>1 day left</Typography>
+          {(todayTasks || []).map((task, index) => (
+            <LeftTimeLineItem key={index}>
+              <TimelineSeparator>
+                <TimelineDot />
+                {index !== todayTasks.length - 1 && <TimelineConnector />}
+              </TimelineSeparator>
+              <TimelineContent sx={{ display: "flex" }}>
+                <Box sx={{ flexGrow: 10 }}>
+                  <Typography sx={{ fontSize: 16 }}>
+                    {task.attributes.name}
+                  </Typography>
+                  <Typography sx={{ fontSize: 12 }} color="text.secondary">
+                    End Date: {task.attributes.endDate}
+                  </Typography>
+                  <WarningNoti>
+                    <TimelapseIcon fontSize="small" />
+                    <Typography sx={{ fontSize: 12 }}>
+                      {daysleftCount(task.attributes.endDate)} days left
+                    </Typography>
+                  </WarningNoti>
                 </Box>
-              </Box>
-              <Box sx={{ flexGrow: 1, textAlign: "center" }}>
-                <Checkbox color="success" />
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem sx={{ "&::before": { content: "none" } }}>
-            <TimelineSeparator>
-              <TimelineDot />
-            </TimelineSeparator>
-            <TimelineContent sx={{ display: "flex" }}>
-              <Box sx={{ flexGrow: 10 }}>
-                <Typography sx={{ fontSize: 16 }}>Task 1</Typography>
-                <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                  End Date: 20 July, 2023
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#ffbf00",
-                  }}
-                >
-                  <TimelapseIcon fontSize="small" />
-                  <Typography sx={{ fontSize: 12 }}>1 day left</Typography>
+                <Box sx={{ flexGrow: 1, textAlign: "center" }}>
+                  <Checkbox color="success" />
                 </Box>
-              </Box>
-              <Box sx={{ flexGrow: 1, textAlign: "center" }}>
-                <Checkbox color="success" />
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
+              </TimelineContent>
+            </LeftTimeLineItem>
+          ))}
         </Timeline>
-      </Card>
+      </TaskBoard>
 
       {/* Future */}
-      <Card sx={{ width: "350px", height: "420px" }}>
+      <TaskBoard>
         <Box>
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "22px",
-              color: "#000",
-              marginTop: "15px",
-            }}
-          >
+          <BoardTitle variant="h6" component="div">
             Future
-          </Typography>
-          <Typography
-            sx={{ fontSize: 15, textAlign: "center" }}
-            color="text.secondary"
-          >
-            Within the next 3 days
-          </Typography>
+          </BoardTitle>
+          <BoardSubTitle color="text.secondary">
+            You have {futureTasks.length} upcoming tasks
+          </BoardSubTitle>
         </Box>
 
         <Timeline sx={{ margin: "10px 25px" }}>
-          <TimelineItem sx={{ "&::before": { content: "none" } }}>
-            <TimelineSeparator>
-              <TimelineDot />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ display: "flex" }}>
-              <Box sx={{ flexGrow: 10 }}>
-                <Typography sx={{ fontSize: 16 }}>Task 1</Typography>
-                <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                  Start Date: 20 July, 2023
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#159947",
-                  }}
-                >
-                  <TimelapseIcon fontSize="small" />
-                  <Typography sx={{ fontSize: 12 }}>1 day left</Typography>
+          {(futureTasks || []).map((task, index) => (
+            <LeftTimeLineItem key={index}>
+              <TimelineSeparator>
+                <TimelineDot />
+                {index !== futureTasks.length - 1 && <TimelineConnector />}
+              </TimelineSeparator>
+              <TimelineContent sx={{ display: "flex" }}>
+                <Box sx={{ flexGrow: 10 }}>
+                  <Typography sx={{ fontSize: 16 }}>
+                    {task.attributes.name}
+                  </Typography>
+                  <Typography sx={{ fontSize: 12 }} color="text.secondary">
+                    Start Date: {task.attributes.startDate}
+                  </Typography>
+                  <FutureNoti>
+                    <TimelapseIcon fontSize="small" />
+                    <Typography sx={{ fontSize: 12 }}>
+                      {daysleftCount(task.attributes.startDate)} days to start
+                    </Typography>
+                  </FutureNoti>
                 </Box>
-              </Box>
-              <Box sx={{ flexGrow: 1, textAlign: "right" }}>
-                <Checkbox color="success" />
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem sx={{ "&::before": { content: "none" } }}>
-            <TimelineSeparator>
-              <TimelineDot />
-            </TimelineSeparator>
-            <TimelineContent sx={{ display: "flex" }}>
-              <Box sx={{ flexGrow: 10 }}>
-                <Typography sx={{ fontSize: 16 }}>Task 1</Typography>
-                <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                  Start Date: 20 July, 2023
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    color: "#159947",
-                  }}
-                >
-                  <TimelapseIcon fontSize="small" />
-                  <Typography sx={{ fontSize: 12 }}>1 day left</Typography>
+                <Box sx={{ flexGrow: 1, textAlign: "right" }}>
+                  <Checkbox color="success" />
                 </Box>
-              </Box>
-              <Box sx={{ flexGrow: 1, textAlign: "right" }}>
-                <Checkbox color="success" />
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
+              </TimelineContent>
+            </LeftTimeLineItem>
+          ))}
         </Timeline>
-      </Card>
+      </TaskBoard>
     </div>
   );
 }

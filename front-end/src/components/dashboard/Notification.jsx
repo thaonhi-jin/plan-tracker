@@ -12,8 +12,15 @@ import {
   ListSubheader,
 } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import { useDispatch, useSelector } from "react-redux";
+import { WarningProjectsFilter, daysleftCount } from "../../redux/methods";
+import { setProjectActive } from "../../redux/cacheSlice";
 
 function Notification() {
+  const infoProjects = useSelector((state) => state.cache.infoProjects);
+  const warningProjects = WarningProjectsFilter(infoProjects);
+  const dispatch = useDispatch();
+
   return (
     <Card
       sx={{
@@ -23,16 +30,9 @@ function Notification() {
         padding: "15px",
       }}
     >
-      <List
-        sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
-        // subheader={
-        //   <Typography sx={{ fontSize: 22, fontWeight: 700 }}>
-        //     Upcoming
-        //   </Typography>
-        // }
-      >
+      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         <ListSubheader sx={{ textAlign: "center" }}>
-          <Badge color="warning" badgeContent={3}>
+          <Badge color="warning" badgeContent={warningProjects.length}>
             <NotificationsActiveIcon fontSize="large" />
           </Badge>
           <Typography
@@ -42,35 +42,34 @@ function Notification() {
             Deadline is due soon
           </Typography>
         </ListSubheader>
-        <Paper elevation={1} sx={{ margin: "15px 0" }}>
-          <ListItemButton>
-            <ListItemText primary="Project" secondary="Deadline: Jan 9, 2014" />
 
-            <ListItemAvatar>
-              <Chip label="2 days due" sx={{ bgcolor: "#fcfc5c" }} />
-            </ListItemAvatar>
-          </ListItemButton>
-        </Paper>
+        {warningProjects.length > 0
+          ? warningProjects.map((project) => (
+              <Paper key={project.id} elevation={1} sx={{ margin: "15px 0" }}>
+                <ListItemButton
+                  onClick={() => dispatch(setProjectActive(project.id))}
+                >
+                  <ListItemText
+                    primary={project.attributes.title}
+                    secondary={project.attributes.deadline}
+                  />
 
-        <Paper elevation={1} sx={{ margin: "15px 0" }}>
-          <ListItemButton>
-            <ListItemText primary="Project" secondary="Deadline: Jan 9, 2014" />
-
-            <ListItemAvatar>
-              <Chip label="2 days due" sx={{ bgcolor: "#fcfc5c" }} />
-            </ListItemAvatar>
-          </ListItemButton>
-        </Paper>
-
-        <Paper elevation={1} sx={{ margin: "15px 0" }}>
-          <ListItemButton>
-            <ListItemText primary="Project" secondary="Deadline: Jan 9, 2014" />
-
-            <ListItemAvatar>
-              <Chip label="2 days due" sx={{ bgcolor: "#fcfc5c" }} />
-            </ListItemAvatar>
-          </ListItemButton>
-        </Paper>
+                  <ListItemAvatar>
+                    <Chip
+                      label={
+                        daysleftCount(project.attributes.deadline) === 0
+                          ? "today"
+                          : `${daysleftCount(
+                              project.attributes.deadline
+                            )} days left`
+                      }
+                      sx={{ bgcolor: "#fcfc5c" }}
+                    />
+                  </ListItemAvatar>
+                </ListItemButton>
+              </Paper>
+            ))
+          : ""}
       </List>
     </Card>
   );
