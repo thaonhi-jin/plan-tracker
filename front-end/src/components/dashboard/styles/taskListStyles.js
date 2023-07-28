@@ -3,8 +3,13 @@ import { TimelineItem } from "@mui/lab";
 import { Box, Card, Paper, Typography } from "@mui/material";
 
 export const TaskBoard = styled(Card)({
-    width: "350px", height: "420px"
+    width: "350px", height: "420px",
+    "::-webkit-scrollbar": {
+        width: "0"
+    },
+    overflowY: "scroll",
 })
+
 
 export const BoardTitle = styled(Typography)({
     textAlign: "center",

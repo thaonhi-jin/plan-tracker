@@ -34,7 +34,7 @@ function ProjectCard() {
     activeTasks.tasks
   );
 
-  // console.log(activeProject);
+  console.log(activeProject, updateStatus);
 
   useEffect(() => {
     console.log("here4");

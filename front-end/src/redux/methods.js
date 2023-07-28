@@ -27,8 +27,8 @@ export const checkProjectStatus = (startDate, endDate, deadline, tasks) => {
         let date = new Date().toISOString().slice(0, 10)
         let today = new Date(date);
         if (today < start) return projectStatus[0];
-        else if (start <= today && today < end) return projectStatus[1];
-        else if (end <= today && today <= dl) return projectStatus[2];
+        else if (start <= today && today <= end) return projectStatus[1];
+        else if (end < today && today <= dl) return projectStatus[2];
         else if (dl < today) return projectStatus[3];
     }
 };

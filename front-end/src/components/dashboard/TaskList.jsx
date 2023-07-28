@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/dashboard.css";
 import { Box, Typography, Checkbox, Stack, IconButton } from "@mui/material";
 import TimelapseIcon from "@mui/icons-material/Timelapse";
@@ -24,8 +24,17 @@ import {
 } from "./styles/taskListStyles";
 import { useSelector } from "react-redux";
 import { checkTaskStatus, daysleftCount } from "../../redux/methods";
+import CompleteModal from "./modals/CompleteModal";
+import DeleteModal from "./modals/DeleteModal";
+import ExtendModal from "./modals/ExtendModal";
+import NavigateModal from "./modals/NavigateModal";
 
 function TaskList() {
+  const [openComplete, setOpenComplete] = useState(false);
+  const [openDel, setOpenDel] = useState(false);
+  const [openExtend, setOpenExtend] = useState(false);
+  const [openActiveProject, setOpenActiveProject] = useState(false);
+  const [selectedTask, setSelectedTask] = useState({});
   const allTasks = useSelector((state) => state.cache.allTasks);
   const uncompletedTasks = allTasks.filter(
     (task) => !task.attributes.isCompleted
@@ -39,7 +48,25 @@ function TaskList() {
   const futureTasks = uncompletedTasks.filter(
     (task) => checkTaskStatus(task) === "Not Started"
   );
-  console.log(pastTasks, todayTasks, futureTasks);
+
+  // complete modal
+  const handleOpenComplete = (task) => {
+    setSelectedTask(task);
+    setOpenComplete(true);
+  };
+
+  // delete modal
+  const handleOpenDel = (task) => {
+    setSelectedTask(task);
+    setOpenDel(true);
+  };
+
+  // extend modal
+  const handleOpenExtend = (task) => {
+    setSelectedTask(task);
+    setOpenExtend(true);
+  };
+
   return (
     <div className="task-lists">
       {/* Past - Not Completed */}
@@ -57,7 +84,11 @@ function TaskList() {
           {(pastTasks || []).map((task) => (
             <NotiPaper elevation={1} key={task.id}>
               <Box sx={{ flexGrow: 1 }}>
-                <Checkbox color="success" />
+                <Checkbox
+                  checked={task.attributes.isCompleted}
+                  color="success"
+                  onClick={() => handleOpenComplete(task)}
+                />
               </Box>
               <Box sx={{ flexGrow: 15 }}>
                 <Typography sx={{ fontSize: 16, marginBottom: "5px" }}>
@@ -70,11 +101,11 @@ function TaskList() {
                   </Typography>
                 </OverdueNoti>
               </Box>
-              <IconButton>
+              <IconButton onClick={() => handleOpenExtend(task)}>
                 <UpdateIcon />
               </IconButton>
 
-              <IconButton>
+              <IconButton onClick={() => handleOpenDel(task)}>
                 <DeleteForeverIcon />
               </IconButton>
             </NotiPaper>
@@ -116,7 +147,11 @@ function TaskList() {
                   </WarningNoti>
                 </Box>
                 <Box sx={{ flexGrow: 1, textAlign: "center" }}>
-                  <Checkbox color="success" />
+                  <Checkbox
+                    checked={task.attributes.isCompleted}
+                    color="success"
+                    onClick={() => handleOpenComplete(task)}
+                  />
                 </Box>
               </TimelineContent>
             </LeftTimeLineItem>
@@ -158,13 +193,54 @@ function TaskList() {
                   </FutureNoti>
                 </Box>
                 <Box sx={{ flexGrow: 1, textAlign: "right" }}>
-                  <Checkbox color="success" />
+                  <Checkbox
+                    checked={task.attributes.isCompleted}
+                    color="success"
+                    onClick={() => handleOpenComplete(task)}
+                  />
                 </Box>
               </TimelineContent>
             </LeftTimeLineItem>
           ))}
         </Timeline>
       </TaskBoard>
+
+      {/* Complete Modal */}
+      {openComplete && (
+        <CompleteModal
+          openComplete={openComplete}
+          setOpenComplete={setOpenComplete}
+          task={selectedTask}
+        />
+      )}
+
+      {/* Delete Modal */}
+      {openDel && (
+        <DeleteModal
+          openDel={openDel}
+          setOpenDel={setOpenDel}
+          task={selectedTask}
+        />
+      )}
+
+      {/* Extend Modal */}
+      {openExtend && (
+        <ExtendModal
+          openExtend={openExtend}
+          setOpenExtend={setOpenExtend}
+          setOpenActiveProject={setOpenActiveProject}
+          task={selectedTask}
+        />
+      )}
+
+      {/* Navigate Modal */}
+      {openActiveProject && (
+        <NavigateModal
+          openActiveProject={openActiveProject}
+          setOpenActiveProject={setOpenActiveProject}
+          projectID={selectedTask.projectID}
+        />
+      )}
     </div>
   );
 }

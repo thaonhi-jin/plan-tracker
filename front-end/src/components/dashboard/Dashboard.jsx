@@ -28,9 +28,11 @@ import { updateAllTasks } from "../../redux/cacheSlice";
 function Dashboard() {
   const projectStatus = ["Completed", "In Progress", "It's overdue"];
   const infoProjects = useSelector((state) => state.cache.infoProjects);
-
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  console.log("DB1");
+  console.log(infoProjects);
+
   useEffect(() => {
     setLoading(true);
     axios

@@ -10,7 +10,7 @@ function Tasks() {
   const status = ["Not Started", "In Progress", "Completed"];
   const activeTasks = useSelector((state) => state.cache.activeTasks);
   const [openAddTask, setOpenAddTask] = useState(false);
-  // console.log(activeTasks);
+  console.log(activeTasks);
   console.log("here5");
 
   // add task

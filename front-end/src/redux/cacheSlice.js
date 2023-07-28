@@ -81,11 +81,25 @@ export const cacheSlice = createSlice({
 
                 }
             })
+        },
+        editTaskDashBoard: (state, action) => {
+            let updateTask = action.payload
+            let selectedTask = state.allTasks.find((task) => task.id === updateTask.id)
+            selectedTask.attributes = Object.assign(selectedTask.attributes, updateTask.attributes)
+        },
+        editProjectDashBoard: (state, action) => {
+            let updateProject = action.payload
+            let selectedProject = state.infoProjects.find((project) => project.id === updateProject.id);
+            selectedProject.attributes = Object.assign(selectedProject.attributes, updateProject.attributes);
+        },
+        deleteTaskDashBoard: (state, action) => {
+            let taskID = action.payload
+            state.allTasks = state.allTasks.filter(task => task.id !== taskID)
         }
     },
 })
 
 
-export const { updateInfoList, addInfoProject, editInfoProject, deleteInfoProject, setProjectActive, updateActiveTasks, addTask, editTask, deleteTask, setOpenDashboard, updateAllTasks } = cacheSlice.actions
+export const { updateInfoList, addInfoProject, editInfoProject, deleteInfoProject, setProjectActive, updateActiveTasks, addTask, editTask, deleteTask, setOpenDashboard, updateAllTasks, editTaskDashBoard, editProjectDashBoard, deleteTaskDashBoard } = cacheSlice.actions
 
 export default cacheSlice.reducer
