@@ -2,23 +2,29 @@ import React, { useState } from "react";
 import axios from "axios";
 import {
   Typography,
-  Paper,
-  Checkbox,
   Box,
   Tooltip,
   IconButton,
   Menu,
   MenuItem,
   Chip,
-  Alert,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ScheduleIcon from "@mui/icons-material/Schedule";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import DeleteTask from "../../modals/DeleteTask";
 import EditTask from "../../modals/EditTask";
 import { useDispatch } from "react-redux";
 import { editTask } from "../../redux/cacheSlice";
 import { checkTaskStatus } from "../../redux/methods";
+import {
+  CheckboxStyled,
+  CompletedCheckbox,
+  CompletedTypo,
+  PaperStyle,
+  TaskDateBox,
+  TaskName,
+} from "./styles/TaskCardStyles";
 
 function TaskCard({ task }) {
   const dispatch = useDispatch();
@@ -77,30 +83,16 @@ function TaskCard({ task }) {
     setAnchorElUser(null);
   };
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        width: "256px",
-        height: "fit-content",
-        padding: "12px 12px",
-        margin: "12px 0",
-        borderRadius: "7px",
-      }}
-    >
+    <PaperStyle elevation={3}>
       <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-        <Typography
-          gutterBottom
-          variant="h6"
-          component="div"
-          sx={{
-            fontSize: "16px",
-            fontWeight: "700",
-            cursor: "pointer",
-            flexGrow: 4,
-          }}
-        >
+        <TaskName gutterBottom variant="h6" component="div">
           {task.attributes.name}
-        </Typography>
+        </TaskName>
+        {checkTaskStatus(task) === "Overdue" &&
+          !task.attributes.isCompleted && (
+            <ErrorOutlineIcon sx={{ color: "#FC5A5A" }} />
+          )}
+
         <Tooltip title="Open settings" sx={{ flexGrow: 1 }}>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             <MoreVertIcon fontSize="medium" />
@@ -157,49 +149,42 @@ function TaskCard({ task }) {
         )}
       </Menu>
 
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          margin: "10px 3px",
-        }}
-      >
-        <ScheduleIcon sx={{ flexGrow: 1 }} fontSize="medium" />
+      <TaskDateBox>
+        <ScheduleIcon sx={{ flexGrow: 1 }} fontSize="medium" color="action" />
         <Typography sx={{ flexGrow: 4 }} fontSize="14px" color="text.secondary">
-          <Chip label={task.attributes.startDate} sx={{ height: "26px" }} /> -{" "}
-          <Chip label={task.attributes.endDate} sx={{ height: "26px" }} />
+          <Chip
+            label={task.attributes.startDate}
+            sx={{
+              height: "26px",
+            }}
+          />{" "}
+          -{" "}
+          <Chip
+            label={task.attributes.endDate}
+            sx={{
+              height: "26px",
+            }}
+          />
         </Typography>
-      </Box>
+      </TaskDateBox>
 
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          margin: "10px 0",
-        }}
-      >
-        <Checkbox
+      <CompletedCheckbox>
+        <CheckboxStyled
           defaultChecked={task.attributes.isCompleted}
-          sx={{ width: "20px", height: "20px", flexGrow: 1 }}
+          sx={{
+            color:
+              task.attributes.status === "Not Started" ? "#fee135" : "#0DA2FF",
+            "&.Mui-checked": {
+              color: "#3DD598",
+            },
+          }}
           onClick={handleClickCompleted}
         />
-        <Typography
-          sx={{ flexGrow: 10 }}
-          fontSize="14px"
-          color="text.secondary"
-        >
+        <CompletedTypo fontSize="14px" color="text.secondary">
           Completed
-        </Typography>
-      </Box>
-
-      {checkTaskStatus(task) === "Overdue" && !task.attributes.isCompleted && (
-        <Alert sx={{ padding: "0 7px" }} severity="error">
-          It's overdue!
-        </Alert>
-      )}
-    </Paper>
+        </CompletedTypo>
+      </CompletedCheckbox>
+    </PaperStyle>
   );
 }
 

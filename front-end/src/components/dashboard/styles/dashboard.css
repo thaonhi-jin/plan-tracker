@@ -34,5 +34,6 @@
 .task-lists {
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
+  padding-left: 10px;
 }

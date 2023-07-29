@@ -10,17 +10,10 @@ import {
 } from "recharts";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { ChartCard, ChartTitle } from "./styles/dashboardStyles";
 
 function Chart() {
-  const weekdays = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const allTasks = useSelector((state) => state.cache.allTasks);
   const uncompletedTasks = allTasks.filter(
     (task) => !task.attributes.isCompleted
@@ -62,16 +55,37 @@ function Chart() {
     console.log(data);
     return data;
   };
+
   return (
-    <BarChart width={730} height={250} data={dataAggregation()}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="weekday" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Bar dataKey="Completed" fill="#82ca9d" radius={8} />
-      <Bar dataKey="Uncompleted" fill="#f28b88" radius={8} />
-    </BarChart>
+    <ChartCard>
+      <ChartTitle>Number of tasks in this week</ChartTitle>
+      <BarChart width={700} height={250} data={dataAggregation()} barGap={10}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="weekday" tickLine={false} />
+        <YAxis domain={[0, "dataMax + 2"]} axisLine={false} tickLine={false} />
+        <Tooltip cursor={{ fill: "transparent" }} />
+        <Legend
+          verticalAlign="top"
+          align="right"
+          height={40}
+          iconType="circle"
+          iconSize={8}
+          wrapperStyle={{ fontSize: "13px" }}
+        />
+        <Bar
+          dataKey="Completed"
+          fill="#01058A"
+          radius={[2, 2, 0, 0]}
+          barSize={20}
+        ></Bar>
+        <Bar
+          dataKey="Uncompleted"
+          fill="#1AA8E9"
+          radius={[2, 2, 0, 0]}
+          barSize={20}
+        />
+      </BarChart>
+    </ChartCard>
   );
 }
 

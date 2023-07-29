@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Button,
-  Typography,
-  Grid,
-  Box,
-} from "@mui/material";
+import { CardContent, Button, Typography, Grid, Box } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
@@ -19,6 +11,13 @@ import DeleteProject from "../../modals/DeleteProject";
 import EditProject from "../../modals/EditProject";
 import { editInfoProject } from "../../redux/cacheSlice";
 import { checkProjectStatus } from "../../redux/methods";
+import {
+  CardActionStyled,
+  ProjectCardContent,
+  ProjectInfoBox,
+  ProjectInfoItem,
+  ProjectTitle,
+} from "./styles/ProjectCardStyles";
 
 function ProjectCard() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
@@ -68,111 +67,59 @@ function ProjectCard() {
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: "100%",
-        borderRadius: "none",
-        boxShadow: 0,
-        marginBottom: "50px",
-      }}
-    >
+    <ProjectCardContent>
       <CardContent>
-        <Box
-          sx={{
-            textAlign: "center",
-          }}
-        >
-          <Typography
-            variant="h4"
-            component="div"
-            sx={{
-              textAlign: "center",
-              fontWeight: "700",
-              fontSize: "32px",
-              color: "#000",
-              marginBottom: "10px",
-            }}
-          >
+        <Box sx={{ textAlign: "center" }}>
+          <ProjectTitle variant="h4" component="div">
             {activeProject.attributes.title}
-          </Typography>
+          </ProjectTitle>
           <Typography sx={{ fontSize: 18 }} color="text.secondary">
             {activeProject.attributes.description}
           </Typography>
         </Box>
 
-        <Box
-          sx={{
-            width: "40%",
-            margin: "20px auto",
-          }}
-        >
+        <ProjectInfoBox>
           <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
             <Grid item xs={6}>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <AccessAlarmsIcon sx={{ flexGrow: 1 }} />
-                <Typography sx={{ flexGrow: 2 }}>
+              <ProjectInfoItem>
+                <AccessAlarmsIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
+                <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
                   Deadline: {activeProject.attributes.deadline}
                 </Typography>
-              </Box>
+              </ProjectInfoItem>
             </Grid>
             <Grid item xs={6}>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <NotificationsIcon sx={{ flexGrow: 1 }} />
-                <Typography sx={{ flexGrow: 2 }}>
+              <ProjectInfoItem>
+                <NotificationsIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
+                <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
                   Status: {activeProject.attributes.status}
                 </Typography>
-              </Box>
+              </ProjectInfoItem>
             </Grid>
             <Grid item xs={6}>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <WorkHistoryIcon sx={{ flexGrow: 1 }} />
-                <Typography sx={{ flexGrow: 2 }}>
+              <ProjectInfoItem>
+                <WorkHistoryIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
+                <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
                   Start: {activeProject.attributes.startDate}
                 </Typography>
-              </Box>
+              </ProjectInfoItem>
             </Grid>
             <Grid item xs={6}>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <WorkHistoryIcon sx={{ flexGrow: 1 }} />
-                <Typography sx={{ flexGrow: 2 }}>
+              <ProjectInfoItem>
+                <WorkHistoryIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
+                <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
                   Finish: {activeProject.attributes.endDate}
                 </Typography>
-              </Box>
+              </ProjectInfoItem>
             </Grid>
           </Grid>
-        </Box>
+        </ProjectInfoBox>
       </CardContent>
-      <CardActions
-        sx={{ display: { xs: "none", md: "flex" }, justifyContent: "center" }}
-      >
+      <CardActionStyled>
         <Button
           variant="contained"
           size="small"
@@ -208,8 +155,8 @@ function ProjectCard() {
             projectTitle={activeProject.attributes.title}
           />
         )}
-      </CardActions>
-    </Card>
+      </CardActionStyled>
+    </ProjectCardContent>
   );
 }
 

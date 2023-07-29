@@ -38,7 +38,8 @@ export const WidgetContent = styled(CardContent)({
 
 export const WidgetNumber = styled(Typography)({
     marginLeft: "5px",
-    fontSize: "32px"
+    fontSize: "32px",
+    color: "#01058A"
 })
 
 export const WidgetIcon = styled(Box)({
@@ -49,6 +50,32 @@ export const WidgetIcon = styled(Box)({
     flexGrow: 1,
 })
 
+// Chart
+export const ChartCard = styled(Card)({
+    width: "fit-content",
+    paddingLeft: "15px",
+    paddingRight: "65px",
+    marginLeft: "35px",
+})
+
 export const ChartTitle = styled(Typography)({
-    textAlign: "center", marginBottom: "15px"
+    textAlign: "center", margin: "15px auto",
+    fontWeight: "700",
+    color: "#01058A"
+})
+
+// Notification
+export const NotificationCard = styled(Card)({
+    width: "300px",
+    marginLeft: "20px",
+    height: "410px",
+    padding: "15px",
+    "::-webkit-scrollbar": {
+        width: "0",
+    },
+    overflowY: "scroll",
+})
+
+export const CartSubTitle = styled(Typography)({
+    fontSize: 15, textAlign: "center", color: "#1AA8E9"
 })

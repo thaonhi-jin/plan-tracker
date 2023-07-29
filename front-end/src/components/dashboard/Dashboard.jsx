@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./styles/dashboard.css";
 import {
-  ChartTitle,
   DateBox,
   HeaderTypo,
   WelcomeTypo,
@@ -14,22 +13,24 @@ import Chart from "./Chart";
 import Notification from "./Notification";
 import TaskList from "./TaskList";
 import { Box, Chip, Typography } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import ReportIcon from "@mui/icons-material/Report";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
-import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import TodayIcon from "@mui/icons-material/Today";
 import { ProjectsCount } from "../../redux/methods";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { updateAllTasks } from "../../redux/cacheSlice";
+import moment from "moment";
 
 function Dashboard() {
   const projectStatus = ["Completed", "In Progress", "It's overdue"];
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const today = moment().format("ddd MMMM Do, YYYY");
   console.log("DB1");
   console.log(infoProjects);
 
@@ -54,7 +55,10 @@ function Dashboard() {
       <div className="header">
         <Box>
           <WelcomeTypo color="text.secondary">
-            Hi, welcome back to Plan Tracker{" "}
+            Hi, welcome back to{" "}
+            <span style={{ color: "#0DA2FF", fontWeight: "600" }}>
+              Plan Tracker
+            </span>{" "}
             <WavingHandIcon fontSize="small" sx={{ color: "#73C2FB" }} />
           </WelcomeTypo>
           <HeaderTypo variant="h4" component="div">
@@ -64,15 +68,12 @@ function Dashboard() {
 
         <DateBox>
           <Chip
-            sx={{ color: "#73C2FB", padding: "5px" }}
+            sx={{ color: "#01058A", padding: "5px", fontWeight: "600" }}
             icon={<TodayIcon fontSize="medium" />}
-            label="Wed 26 July, 2023"
+            label={today}
             variant="outlined"
           />
-          <SentimentVerySatisfiedIcon
-            fontSize="large"
-            sx={{ color: "#73C2FB" }}
-          />
+          <LightModeIcon fontSize="large" sx={{ color: "#73C2FB" }} />
         </DateBox>
       </div>
 
@@ -96,11 +97,20 @@ function Dashboard() {
                   </Box>
                   <WidgetIcon>
                     {index === 0 ? (
-                      <CheckCircleIcon color="success" fontSize="large" />
+                      <CheckCircleOutlineIcon
+                        sx={{ color: "#3DD598" }}
+                        fontSize="large"
+                      />
                     ) : index === 1 ? (
-                      <TimelineIcon color="primary" fontSize="large" />
+                      <TimelineIcon
+                        sx={{ color: "#1AA8E9" }}
+                        fontSize="large"
+                      />
                     ) : (
-                      <ReportIcon color="error" fontSize="large" />
+                      <WarningAmberIcon
+                        sx={{ color: "#FC5A5A" }}
+                        fontSize="large"
+                      />
                     )}
                   </WidgetIcon>
                 </WidgetContent>
@@ -109,8 +119,6 @@ function Dashboard() {
           </div>
 
           <div className="chart">
-            <ChartTitle>Number of completed tasks in this week</ChartTitle>
-
             <Chart />
           </div>
         </div>

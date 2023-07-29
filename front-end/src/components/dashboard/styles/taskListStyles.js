@@ -15,12 +15,13 @@ export const BoardTitle = styled(Typography)({
     textAlign: "center",
     fontWeight: "700",
     fontSize: "22px",
-    color: "#000",
+    color: "#01058A",
     marginTop: "15px",
 })
 
 export const BoardSubTitle = styled(Typography)({
-    fontSize: 15, textAlign: "center"
+    fontSize: 15, textAlign: "center",
+    color: "#1AA8E9"
 })
 
 // Past Board
@@ -34,7 +35,7 @@ export const NotiPaper = styled(Paper)({
 export const OverdueNoti = styled(Box)({
     display: "flex",
     alignItems: "center",
-    color: "red",
+    color: "#FC5A5A",
     gap: "3px",
 })
 
@@ -46,12 +47,12 @@ export const LeftTimeLineItem = styled(TimelineItem)({
 export const WarningNoti = styled(Box)({
     display: "flex",
     alignItems: "center",
-    color: "#ffbf00",
+    color: "#0DA2FF",
 })
 
 // Future Board
 export const FutureNoti = styled(Box)({
     display: "flex",
     alignItems: "center",
-    color: "#159947",
+    color: "#3DD598",
 })

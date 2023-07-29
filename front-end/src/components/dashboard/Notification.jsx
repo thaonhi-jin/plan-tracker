@@ -5,7 +5,6 @@ import {
   ListItemText,
   ListItemAvatar,
   Typography,
-  Card,
   Badge,
   Paper,
   Chip,
@@ -15,6 +14,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { useDispatch, useSelector } from "react-redux";
 import { WarningProjectsFilter, daysleftCount } from "../../redux/methods";
 import { setProjectActive } from "../../redux/cacheSlice";
+import { CartSubTitle, NotificationCard } from "./styles/dashboardStyles";
 
 function Notification() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
@@ -22,25 +22,19 @@ function Notification() {
   const dispatch = useDispatch();
 
   return (
-    <Card
-      sx={{
-        width: "300px",
-        marginLeft: "20px",
-        height: "400px",
-        padding: "15px",
-      }}
-    >
+    <NotificationCard>
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         <ListSubheader sx={{ textAlign: "center" }}>
-          <Badge color="warning" badgeContent={warningProjects.length}>
-            <NotificationsActiveIcon fontSize="large" />
-          </Badge>
-          <Typography
-            sx={{ fontSize: 15, textAlign: "center" }}
-            color="text.secondary"
+          <Badge
+            sx={{ color: "#01058A" }}
+            badgeContent={warningProjects.length}
           >
-            Deadline is due soon
-          </Typography>
+            <NotificationsActiveIcon
+              fontSize="large"
+              sx={{ color: "#01058A" }}
+            />
+          </Badge>
+          <CartSubTitle>Deadline is due soon</CartSubTitle>
         </ListSubheader>
 
         {warningProjects.length > 0
@@ -63,7 +57,7 @@ function Notification() {
                               project.attributes.deadline
                             )} days left`
                       }
-                      sx={{ bgcolor: "#fcfc5c" }}
+                      sx={{ bgcolor: "#d9f1ff", color: "#01058A" }}
                     />
                   </ListItemAvatar>
                 </ListItemButton>
@@ -71,7 +65,7 @@ function Notification() {
             ))
           : ""}
       </List>
-    </Card>
+    </NotificationCard>
   );
 }
 

@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { Button, Typography, Box, Divider, Stack, Grid } from "@mui/material";
+import { Button, Box, Divider, Stack, Grid } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CircleIcon from "@mui/icons-material/Circle";
 import TaskCard from "./TaskCard";
 import { useSelector } from "react-redux";
 import AddTask from "../../modals/AddTask";
+import {
+  ListGrid,
+  StatusTitle,
+  TaskListHeader,
+  TaskListTitle,
+} from "./styles/TasksStyles";
 
 function Tasks() {
   const status = ["Not Started", "In Progress", "Completed"];
@@ -20,30 +26,13 @@ function Tasks() {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          margin: "5px 30px",
-        }}
-      >
-        <Typography
-          variant="h4"
-          component="div"
-          sx={{
-            textAlign: "center",
-            fontWeight: "700",
-            fontSize: "20px",
-            color: "#000",
-          }}
-        >
+      <TaskListHeader>
+        <TaskListTitle variant="h4" component="div">
           Tasks (5)
-        </Typography>
+        </TaskListTitle>
         <Button
           size="small"
-          //   variant="outlined"
-          sx={{ color: "#0DA2FF" }}
+          sx={{ color: "#1AA8E9", fontWeight: "600" }}
           startIcon={<AddIcon />}
           onClick={handleOpenAddTask}
         >
@@ -58,16 +47,12 @@ function Tasks() {
             projectID={activeTasks.projectID}
           />
         )}
-      </Box>
+      </TaskListHeader>
       <Divider sx={{ margin: "0 20px", height: "2px", color: "#828282" }} />
 
       <Grid sx={{ flexGrow: 1 }}>
         <Grid item xs={12}>
-          <Grid
-            container
-            justifyContent="space-around"
-            sx={{ padding: "30px 0px" }}
-          >
+          <ListGrid container justifyContent="space-around">
             {status.map((value, index) => (
               <Grid key={index} item>
                 <Box sx={{ display: "flex", minWidth: "280px" }}>
@@ -76,27 +61,16 @@ function Tasks() {
                     sx={{
                       color:
                         index === 0
-                          ? "#FFD300"
+                          ? "#fee135"
                           : index === 1
-                          ? "#1F51FF"
-                          : "green",
+                          ? "#0DA2FF"
+                          : "#3DD598",
                     }}
                   />
 
-                  <Typography
-                    variant="h5"
-                    gutterBottom
-                    sx={{
-                      fontWeight: "600",
-                      color: "#828FA3",
-                      fontSize: "16px",
-                      letterSpacing: "0.15em",
-                      alignItems: "center",
-                      margin: "0 10px",
-                    }}
-                  >
+                  <StatusTitle variant="h5" gutterBottom>
                     {value} (4)
-                  </Typography>
+                  </StatusTitle>
                 </Box>
                 <Stack spacing={2}>
                   {activeTasks.tasks.length > 0
@@ -109,7 +83,7 @@ function Tasks() {
                 </Stack>
               </Grid>
             ))}
-          </Grid>
+          </ListGrid>
         </Grid>
       </Grid>
     </>
