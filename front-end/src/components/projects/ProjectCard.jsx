@@ -18,6 +18,7 @@ import {
   ProjectInfoItem,
   ProjectTitle,
 } from "./styles/ProjectCardStyles";
+import dayjs from "dayjs";
 
 function ProjectCard() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
@@ -88,7 +89,10 @@ function ProjectCard() {
               <ProjectInfoItem>
                 <AccessAlarmsIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
                 <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
-                  Deadline: {activeProject.attributes.deadline}
+                  Deadline:{" "}
+                  {dayjs(activeProject.attributes.deadline).format(
+                    "DD-MM-YYYY"
+                  )}
                 </Typography>
               </ProjectInfoItem>
             </Grid>
@@ -104,7 +108,10 @@ function ProjectCard() {
               <ProjectInfoItem>
                 <WorkHistoryIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
                 <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
-                  Start: {activeProject.attributes.startDate}
+                  Start:{" "}
+                  {dayjs(activeProject.attributes.startDate).format(
+                    "DD-MM-YYYY"
+                  )}
                 </Typography>
               </ProjectInfoItem>
             </Grid>
@@ -112,7 +119,8 @@ function ProjectCard() {
               <ProjectInfoItem>
                 <WorkHistoryIcon sx={{ flexGrow: 1, color: "#73C2FB" }} />
                 <Typography sx={{ flexGrow: 2, color: "#01058A" }}>
-                  Finish: {activeProject.attributes.endDate}
+                  Finish:{" "}
+                  {dayjs(activeProject.attributes.endDate).format("DD-MM-YYYY")}
                 </Typography>
               </ProjectInfoItem>
             </Grid>

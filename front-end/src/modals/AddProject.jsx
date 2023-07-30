@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 import { useDispatch } from "react-redux";
 import {
   Box,
@@ -12,24 +13,68 @@ import {
   Stack,
   Chip,
 } from "@mui/material";
-import { addInfoProject } from "../redux/cacheSlice";
-import { checkProjectStatus } from "../redux/methods";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { addInfoProject, setProjectActive } from "../redux/cacheSlice";
+import { checkInValid, checkProjectStatus } from "../redux/methods";
 
 function AddProject({ openAdd, setOpenAdd }) {
+  const today = dayjs(dayjs().format("YYYY-MM-DD"));
   const [newProject, setNewProject] = useState({});
   const dispatch = useDispatch();
+  // console.log(newProject);
 
   // check deadline,startDate, endDate is existed
   const checkDateExisted = () => {
-    if (newProject.deadline && newProject.startDate && newProject.endDate)
-      return true;
-    return false;
+    if (
+      checkInValid(newProject.deadline, "date") ||
+      checkInValid(newProject.startDate, "date") ||
+      checkInValid(newProject.endDate, "date")
+    )
+      return false;
+    return true;
   };
 
+  // return minDate/maxDate for Date Type
+  const FindMinDate = (dateType) => {
+    if (dateType === "deadline") {
+      if (!checkInValid(newProject.endDate, "date"))
+        return dayjs(newProject.endDate);
+      else if (!checkInValid(newProject.startDate, "date"))
+        return dayjs(newProject.startDate);
+    } else if (dateType === "end") {
+      if (!checkInValid(newProject.startDate, "date"))
+        return dayjs(newProject.startDate);
+    }
+    return today;
+  };
+
+  const FindMaxDate = (dateType) => {
+    if (dateType === "start") {
+      if (!checkInValid(newProject.endDate, "date"))
+        return dayjs(newProject.endDate);
+      else if (!checkInValid(newProject.deadline, "date"))
+        return dayjs(newProject.deadline);
+    } else if (dateType === "end") {
+      if (!checkInValid(newProject.deadline, "date"))
+        return dayjs(newProject.deadline);
+    }
+  };
+
+  // relate change/update newProject
   const handleSetProject = (e) => {
+    // console.log(e.target.value);
     setNewProject({
       ...newProject,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSetDate = (name, value) => {
+    setNewProject({
+      ...newProject,
+      [name]: value,
     });
   };
 
@@ -51,12 +96,24 @@ function AddProject({ openAdd, setOpenAdd }) {
       .post("http://localhost:1337/api/projects", data)
       .then((res) => {
         dispatch(addInfoProject(res.data.data));
+        return res.data.data.id;
       })
-      .then(() => {
+      .then((id) => {
+        dispatch(setProjectActive(id));
         setNewProject({});
         setOpenAdd(false);
       })
       .catch((err) => console.log(err));
+  };
+
+  // check empty before add project
+  const checkEmpty = () => {
+    return (
+      checkInValid(newProject.title, "text") ||
+      checkInValid(newProject.deadline, "date") ||
+      checkInValid(newProject.startDate, "date") ||
+      checkInValid(newProject.endDate, "date")
+    );
   };
 
   const handleCloseAdd = () => {
@@ -78,7 +135,7 @@ function AddProject({ openAdd, setOpenAdd }) {
               sx={{ minWidth: "300px" }}
               onChange={handleSetProject}
               helperText={
-                newProject.title === undefined
+                checkInValid(newProject.title, "text")
                   ? "Please fill in this field!"
                   : ""
               }
@@ -93,59 +150,80 @@ function AddProject({ openAdd, setOpenAdd }) {
               onChange={handleSetProject}
             />
 
-            <label>Deadline:</label>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <label>Note: Deadline isn't after Start/End Date.</label>
+              <DatePicker
+                required
+                label="Deadline"
+                id="deadline"
+                name="deadline"
+                sx={{ minWidth: "200px" }}
+                format="DD-MM-YYYY"
+                minDate={FindMinDate("deadline")}
+                onChange={(value) => {
+                  if (value)
+                    handleSetDate("deadline", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(newProject.deadline, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
+              />
 
-            <TextField
-              required
-              type="date"
-              id="deadline"
-              name="deadline"
-              sx={{ minWidth: "200px", marginTop: "12px" }}
-              placeholder="dd/mm/yyyy"
-              onChange={handleSetProject}
-              helperText={
-                newProject.deadline === undefined
-                  ? "Please fill in this field!"
-                  : ""
-              }
-            />
+              <label>Note: End Date isn't after Start Date.</label>
+              <DatePicker
+                required
+                label="Start Date"
+                id="startDate"
+                name="startDate"
+                sx={{ minWidth: "200px", marginTop: "12px" }}
+                format="DD-MM-YYYY"
+                minDate={today}
+                maxDate={FindMaxDate("start")}
+                onChange={(value) => {
+                  if (value)
+                    handleSetDate("startDate", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(newProject.startDate, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
+              />
 
-            <label htmlFor="start-date">Start Date :</label>
-            <TextField
-              required
-              type="date"
-              id="start-date"
-              name="startDate"
-              // label="Start Date"
-
-              placeholder="dd/mm/yyyy"
-              helperText={
-                newProject.startDate === undefined
-                  ? "Please fill in this field!"
-                  : ""
-              }
-              variant="outlined"
-              sx={{ minWidth: "200px", marginRight: "10px" }}
-              onChange={handleSetProject}
-            />
-
-            <label htmlFor="end-date">End Date :</label>
-            <TextField
-              required
-              type="date"
-              id="end-date"
-              name="endDate"
-              // label="End Date"
-              placeholder="dd/mm/yyyy"
-              variant="outlined"
-              sx={{ minWidth: "200px" }}
-              helperText={
-                newProject.endDate === undefined
-                  ? "Please fill in this field!"
-                  : ""
-              }
-              onChange={handleSetProject}
-            />
+              <DatePicker
+                required
+                label="End Date"
+                id="endDate"
+                name="endDate"
+                sx={{ minWidth: "200px", marginTop: "12px" }}
+                format="DD-MM-YYYY"
+                minDate={FindMinDate("end")}
+                maxDate={FindMaxDate("end")}
+                onChange={(value) => {
+                  if (value)
+                    handleSetDate("endDate", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(newProject.endDate, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
+              />
+            </LocalizationProvider>
 
             <label>Status: </label>
             <Chip
@@ -157,7 +235,7 @@ function AddProject({ openAdd, setOpenAdd }) {
                       newProject.deadline,
                       []
                     )
-                  : "Not Started"
+                  : "Please fill in dates!"
               }
             />
           </Stack>
@@ -166,6 +244,7 @@ function AddProject({ openAdd, setOpenAdd }) {
       <DialogActions>
         <Button onClick={handleCloseAdd}>Cancel</Button>
         <Button
+          disabled={checkEmpty()}
           onClick={() => {
             handleAddProject();
           }}

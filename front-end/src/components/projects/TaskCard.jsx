@@ -25,6 +25,7 @@ import {
   TaskDateBox,
   TaskName,
 } from "./styles/TaskCardStyles";
+import dayjs from "dayjs";
 
 function TaskCard({ task }) {
   const dispatch = useDispatch();
@@ -153,14 +154,14 @@ function TaskCard({ task }) {
         <ScheduleIcon sx={{ flexGrow: 1 }} fontSize="medium" color="action" />
         <Typography sx={{ flexGrow: 4 }} fontSize="14px" color="text.secondary">
           <Chip
-            label={task.attributes.startDate}
+            label={dayjs(task.attributes.startDate).format("DD-MM-YYYY")}
             sx={{
               height: "26px",
             }}
           />{" "}
           -{" "}
           <Chip
-            label={task.attributes.endDate}
+            label={dayjs(task.attributes.endDate).format("DD-MM-YYYY")}
             sx={{
               height: "26px",
             }}
@@ -172,8 +173,7 @@ function TaskCard({ task }) {
         <CheckboxStyled
           defaultChecked={task.attributes.isCompleted}
           sx={{
-            color:
-              task.attributes.status === "Not Started" ? "#fee135" : "#0DA2FF",
+            color: task.attributes.status === "Not Started" ? "" : "#0DA2FF",
             "&.Mui-checked": {
               color: "#3DD598",
             },

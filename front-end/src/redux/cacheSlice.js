@@ -16,11 +16,12 @@ export const cacheSlice = createSlice({
         addInfoProject: (state, action) => {
             let newProject = action.payload
             let activeProject = state.infoProjects.find((project) => project.isActive);
+            activeProject.isActive = false
             state.infoProjects.push({
                 ...newProject,
-                isActive: true
+                isActive: false
             })
-            activeProject.isActive = false
+
         },
         editInfoProject: (state, action) => {
             let updateProject = action.payload

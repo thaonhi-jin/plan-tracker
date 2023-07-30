@@ -10,15 +10,46 @@ import {
   Stack,
   TextField,
   Chip,
+  Alert,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useDispatch, useSelector } from "react-redux";
 import { editTask } from "../redux/cacheSlice";
+import { checkInValid } from "../redux/methods";
 
 function EditTask({ openEdit, setOpenEdit, setAnchorElUser, task }) {
   const [updateTask, setUpdateTask] = useState({ ...task.attributes });
   const dispatch = useDispatch();
+  const today = dayjs(dayjs().format("YYYY-MM-DD"));
+  const infoProjects = useSelector((state) => state.cache.infoProjects);
+  const activeProject = infoProjects.find((project) => project.isActive);
+  const endDateProject = dayjs(activeProject.attributes.endDate);
+
+  // return maxDate for StartDate
+  const FindMaxDate = () => {
+    if (!checkInValid(updateTask.endDate, "date"))
+      return dayjs(updateTask.endDate);
+    return endDateProject;
+  };
+
+  // return minDate for EndDate
+  const FindMinDate = () => {
+    if (!checkInValid(updateTask.startDate, "date"))
+      return dayjs(updateTask.startDate);
+  };
 
   // edit-task modal
+  const handleUpdateDate = (name, value) => {
+    setUpdateTask((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
   const handleUpdateChange = (e) => {
     setUpdateTask((prev) => {
       return {
@@ -50,11 +81,24 @@ function EditTask({ openEdit, setOpenEdit, setAnchorElUser, task }) {
 
   // check status
   const checkStatus = () => {
+    if (updateTask.isCompleted) return "Completed";
+    if (checkInValid(updateTask.startDate, "date"))
+      return task.attributes.status;
     let currDate = new Date();
     let start = new Date(updateTask.startDate);
     if (currDate >= start) return "In Progress";
     return "Not Started";
   };
+
+  //check empty before add project
+  const checkEmpty = () => {
+    return (
+      checkInValid(updateTask.name, "text") ||
+      checkInValid(updateTask.startDate, "date") ||
+      checkInValid(updateTask.endDate, "date")
+    );
+  };
+  console.log(updateTask.status);
 
   const handleCloseEdit = () => {
     setUpdateTask({});
@@ -67,6 +111,14 @@ function EditTask({ openEdit, setOpenEdit, setAnchorElUser, task }) {
       <DialogContent>
         <Box component="form" sx={{ padding: "10px 5px" }}>
           <Stack spacing={4}>
+            {today.isAfter(endDateProject) && !updateTask.isCompleted ? (
+              <Alert severity="warning">
+                The End Date of project is overdue. You should extend it before
+                edit task.
+              </Alert>
+            ) : (
+              ""
+            )}
             <TextField
               id="outlined-basic"
               name="name"
@@ -75,49 +127,90 @@ function EditTask({ openEdit, setOpenEdit, setAnchorElUser, task }) {
               sx={{ minWidth: "300px" }}
               defaultValue={task.attributes.name}
               onChange={handleUpdateChange}
+              helperText={
+                checkInValid(updateTask.name, "text")
+                  ? "Please fill in this field!"
+                  : ""
+              }
             />
-            <div>
-              <TextField
-                id="outlined-basic"
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <label>Note: End Date isn't after Start Date.</label>
+              <DatePicker
+                required
+                label="Start Date"
+                id="startDate"
                 name="startDate"
-                // label="Start Date"
-                variant="outlined"
-                type="date"
-                placeholder="dd/mm/yyyy"
-                sx={{ minWidth: "200px", marginRight: "10px" }}
-                defaultValue={task.attributes.startDate}
-                onChange={handleUpdateChange}
+                sx={{ minWidth: "200px", marginTop: "12px" }}
+                format="DD-MM-YYYY"
+                defaultValue={dayjs(updateTask.startDate)}
+                maxDate={FindMaxDate()}
+                onChange={(value) => {
+                  if (value)
+                    handleUpdateDate("startDate", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(updateTask.startDate, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
               />
-              <TextField
-                id="outlined-basic"
+
+              {today.isAfter(dayjs(updateTask.endDate)) &&
+              !updateTask.isCompleted ? (
+                <Alert severity="error">
+                  The End Date of task is overdue. Please extend it.
+                </Alert>
+              ) : (
+                ""
+              )}
+
+              <DatePicker
+                required
+                label="End Date"
+                id="endDate"
                 name="endDate"
-                // label="End Date"
-                variant="outlined"
-                sx={{ minWidth: "200px" }}
-                type="date"
-                placeholder="dd/mm/yyyy"
-                defaultValue={task.attributes.endDate}
-                onChange={handleUpdateChange}
+                sx={{ minWidth: "200px", marginTop: "12px" }}
+                format="DD-MM-YYYY"
+                defaultValue={dayjs(updateTask.endDate)}
+                minDate={FindMinDate()}
+                maxDate={endDateProject}
+                onChange={(value) => {
+                  if (value)
+                    handleUpdateDate("endDate", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(updateTask.endDate, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
               />
-            </div>
+            </LocalizationProvider>
 
             <div>
               <label>Status: </label>
               <Chip
-                label={updateTask.startDate ? checkStatus() : "Not Started"}
+                label={checkStatus()}
                 sx={{
                   backgroundColor:
-                    updateTask.startDate && checkStatus() === "In Progress"
-                      ? "#6ac5fe"
-                      : "#fff444",
+                    checkStatus() === "In Progress"
+                      ? "#73C2FB"
+                      : checkStatus() === "Completed"
+                      ? "#3DD598"
+                      : "action",
                 }}
               />
-              <Chip
-                label={
-                  task.attributes.isCompleted ? "Completed" : "Not Completed"
-                }
-                variant="outlined"
-              />
+              {checkStatus() !== "Completed" && (
+                <Chip label="Not Completed" variant="outlined" />
+              )}
             </div>
           </Stack>
         </Box>
@@ -125,6 +218,7 @@ function EditTask({ openEdit, setOpenEdit, setAnchorElUser, task }) {
       <DialogActions>
         <Button onClick={handleCloseEdit}>Cancel</Button>
         <Button
+          disabled={checkEmpty()}
           onClick={() => {
             handleEditTask();
           }}

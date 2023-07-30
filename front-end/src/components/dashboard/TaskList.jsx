@@ -22,14 +22,17 @@ import {
   WarningNoti,
   LeftTimeLineItem,
 } from "./styles/taskListStyles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { checkTaskStatus, daysleftCount } from "../../redux/methods";
 import CompleteModal from "./modals/CompleteModal";
 import DeleteModal from "./modals/DeleteModal";
 import ExtendModal from "./modals/ExtendModal";
 import NavigateModal from "./modals/NavigateModal";
+import { setProjectActive } from "../../redux/cacheSlice";
+import dayjs from "dayjs";
 
 function TaskList() {
+  const dispatch = useDispatch();
   const [openComplete, setOpenComplete] = useState(false);
   const [openDel, setOpenDel] = useState(false);
   const [openExtend, setOpenExtend] = useState(false);
@@ -48,6 +51,11 @@ function TaskList() {
   const futureTasks = uncompletedTasks.filter(
     (task) => checkTaskStatus(task) === "Not Started"
   );
+
+  // callback in sort()
+  const compareDaysLeft = (task1, task2) => {
+    return dayjs(task1.attributes.endDate) - dayjs(task2.attributes.endDate);
+  };
 
   // complete modal
   const handleOpenComplete = (task) => {
@@ -81,7 +89,7 @@ function TaskList() {
         </Box>
 
         <Stack sx={{ width: "100%" }}>
-          {(pastTasks || []).map((task) => (
+          {(pastTasks || []).sort(compareDaysLeft).map((task) => (
             <NotiPaper elevation={1} key={task.id}>
               <Box sx={{ flexGrow: 1 }}>
                 <Checkbox
@@ -90,9 +98,21 @@ function TaskList() {
                   onClick={() => handleOpenComplete(task)}
                 />
               </Box>
-              <Box sx={{ flexGrow: 15 }}>
-                <Typography sx={{ fontSize: 16, marginBottom: "5px" }}>
+              <Box
+                sx={{ flexGrow: 15, cursor: "pointer" }}
+                onClick={() => {
+                  dispatch(setProjectActive(task.projectID));
+                }}
+              >
+                <Typography sx={{ fontSize: 16 }}>
                   {task.attributes.name}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: 12, marginLeft: "3px" }}
+                  color="text.secondary"
+                >
+                  End Date:{" "}
+                  {dayjs(task.attributes.endDate).format("DD-MM-YYYY")}
                 </Typography>
                 <OverdueNoti>
                   <ErrorOutlineIcon fontSize="small" />
@@ -125,19 +145,28 @@ function TaskList() {
         </Box>
 
         <Timeline sx={{ margin: "10px 25px" }}>
-          {(todayTasks || []).map((task, index) => (
+          {(todayTasks || []).sort(compareDaysLeft).map((task, index) => (
             <LeftTimeLineItem key={index}>
               <TimelineSeparator>
                 <TimelineDot />
                 {index !== todayTasks.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent sx={{ display: "flex" }}>
-                <Box sx={{ flexGrow: 10 }}>
+                <Box
+                  sx={{ flexGrow: 10, cursor: "pointer" }}
+                  onClick={() => {
+                    dispatch(setProjectActive(task.projectID));
+                  }}
+                >
                   <Typography sx={{ fontSize: 16 }}>
                     {task.attributes.name}
                   </Typography>
-                  <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                    End Date: {task.attributes.endDate}
+                  <Typography
+                    sx={{ fontSize: 12, marginLeft: "3px" }}
+                    color="text.secondary"
+                  >
+                    End Date:{" "}
+                    {dayjs(task.attributes.endDate).format("DD-MM-YYYY")}
                   </Typography>
                   <WarningNoti>
                     <TimelapseIcon fontSize="small" />
@@ -171,19 +200,28 @@ function TaskList() {
         </Box>
 
         <Timeline sx={{ margin: "10px 25px" }}>
-          {(futureTasks || []).map((task, index) => (
+          {(futureTasks || []).sort(compareDaysLeft).map((task, index) => (
             <LeftTimeLineItem key={index}>
               <TimelineSeparator>
                 <TimelineDot />
                 {index !== futureTasks.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent sx={{ display: "flex" }}>
-                <Box sx={{ flexGrow: 10 }}>
+                <Box
+                  sx={{ flexGrow: 10, cursor: "pointer" }}
+                  onClick={() => {
+                    dispatch(setProjectActive(task.projectID));
+                  }}
+                >
                   <Typography sx={{ fontSize: 16 }}>
                     {task.attributes.name}
                   </Typography>
-                  <Typography sx={{ fontSize: 12 }} color="text.secondary">
-                    Start Date: {task.attributes.startDate}
+                  <Typography
+                    sx={{ fontSize: 12, marginLeft: "3px" }}
+                    color="text.secondary"
+                  >
+                    Start Date:{" "}
+                    {dayjs(task.attributes.startDate).format("DD-MM-YYYY")}
                   </Typography>
                   <FutureNoti>
                     <TimelapseIcon fontSize="small" />

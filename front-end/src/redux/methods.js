@@ -83,3 +83,12 @@ export const LaterToday = (date) => {
     const date2 = new Date(today)
     return date1 > date2
 }
+
+// validate input methods
+
+// check property is empty (underfined, '', invalid)
+export const checkInValid = (value, type) => {
+    if (type === 'text') return value === undefined || value === ''
+    else if (type === 'date') return value === undefined || value === "Invalid Date"
+    return false
+}

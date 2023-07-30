@@ -24,6 +24,11 @@ function App() {
     }
   })
 
+  // scroll on the top of page 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   // check all data
   const checkAllStatus = (projects) => {
     if (projects.length > 0) {

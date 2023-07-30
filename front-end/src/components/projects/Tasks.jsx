@@ -16,7 +16,7 @@ function Tasks() {
   const status = ["Not Started", "In Progress", "Completed"];
   const activeTasks = useSelector((state) => state.cache.activeTasks);
   const [openAddTask, setOpenAddTask] = useState(false);
-  console.log(activeTasks);
+  // console.log(activeTasks);
   console.log("here5");
 
   // add task
@@ -28,7 +28,7 @@ function Tasks() {
     <>
       <TaskListHeader>
         <TaskListTitle variant="h4" component="div">
-          Tasks (5)
+          Tasks ({activeTasks.tasks.length})
         </TaskListTitle>
         <Button
           size="small"
@@ -61,7 +61,7 @@ function Tasks() {
                     sx={{
                       color:
                         index === 0
-                          ? "#fee135"
+                          ? "rgba(0, 0, 0, 0.26)"
                           : index === 1
                           ? "#0DA2FF"
                           : "#3DD598",
@@ -69,7 +69,7 @@ function Tasks() {
                   />
 
                   <StatusTitle variant="h5" gutterBottom>
-                    {value} (4)
+                    {value}
                   </StatusTitle>
                 </Box>
                 <Stack spacing={2}>

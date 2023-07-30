@@ -4,7 +4,6 @@ import {
   ListItemButton,
   ListItemText,
   ListItemAvatar,
-  Typography,
   Badge,
   Paper,
   Chip,
@@ -15,18 +14,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { WarningProjectsFilter, daysleftCount } from "../../redux/methods";
 import { setProjectActive } from "../../redux/cacheSlice";
 import { CartSubTitle, NotificationCard } from "./styles/dashboardStyles";
+import dayjs from "dayjs";
 
 function Notification() {
   const infoProjects = useSelector((state) => state.cache.infoProjects);
   const warningProjects = WarningProjectsFilter(infoProjects);
   const dispatch = useDispatch();
 
+  const compareDaysLeft = (project1, project2) => {
+    return (
+      dayjs(project1.attributes.deadline) - dayjs(project2.attributes.deadline)
+    );
+  };
+
   return (
     <NotificationCard>
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         <ListSubheader sx={{ textAlign: "center" }}>
           <Badge
-            sx={{ color: "#01058A" }}
+            sx={{ color: "#1AA8E9" }}
             badgeContent={warningProjects.length}
           >
             <NotificationsActiveIcon
@@ -38,14 +44,16 @@ function Notification() {
         </ListSubheader>
 
         {warningProjects.length > 0
-          ? warningProjects.map((project) => (
+          ? warningProjects.sort(compareDaysLeft).map((project) => (
               <Paper key={project.id} elevation={1} sx={{ margin: "15px 0" }}>
                 <ListItemButton
                   onClick={() => dispatch(setProjectActive(project.id))}
                 >
                   <ListItemText
                     primary={project.attributes.title}
-                    secondary={project.attributes.deadline}
+                    secondary={dayjs(project.attributes.deadline).format(
+                      "DD-MM-YYYY"
+                    )}
                   />
 
                   <ListItemAvatar>

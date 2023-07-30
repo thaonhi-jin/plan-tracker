@@ -12,6 +12,11 @@ function Project() {
   const [loading, setLoading] = useState(true);
   // console.log("here3_1");
 
+  // scroll on the top of page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

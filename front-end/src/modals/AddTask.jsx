@@ -10,11 +10,21 @@ import {
   Box,
   Button,
   Chip,
+  Alert,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../redux/cacheSlice";
+import { checkInValid } from "../redux/methods";
 
 function AddTask({ openAddTask, setOpenAddTask, projectID }) {
+  const today = dayjs(dayjs().format("YYYY-MM-DD"));
+  const infoProjects = useSelector((state) => state.cache.infoProjects);
+  const activeProject = infoProjects.find((project) => project.isActive);
+  const endDateProject = dayjs(activeProject.attributes.endDate);
   const [newTask, setNewTask] = useState({});
   const dispatch = useDispatch();
   const relation = {
@@ -31,6 +41,25 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
     let start = new Date(newTask.startDate);
     if (currDate >= start) return "In Progress";
     return "Not Started";
+  };
+
+  // return maxDate for StartDate
+  const FindMaxDate = () => {
+    if (!checkInValid(newTask.endDate, "date")) return dayjs(newTask.endDate);
+    return endDateProject;
+  };
+
+  // return minDate for EndDate
+  const FindMinDate = () => {
+    if (!checkInValid(newTask.startDate, "date"))
+      return dayjs(newTask.startDate);
+    return today;
+  };
+
+  const handleSetDate = (name, value) => {
+    setNewTask((prevTask) => {
+      return { ...prevTask, [name]: value };
+    });
   };
 
   const handleSetTask = (e) => {
@@ -64,6 +93,15 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
       .catch((err) => console.log(err));
   };
 
+  //check empty before add project
+  const checkEmpty = () => {
+    return (
+      checkInValid(newTask.name, "text") ||
+      checkInValid(newTask.startDate, "date") ||
+      checkInValid(newTask.endDate, "date")
+    );
+  };
+
   const handleCloseAddTask = () => {
     setNewTask({});
     setOpenAddTask(false);
@@ -74,6 +112,14 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
       <DialogContent>
         <Box component="form" sx={{ padding: "10px 5px" }}>
           <Stack spacing={4}>
+            {today.isAfter(endDateProject) ? (
+              <Alert severity="warning">
+                The End Date of project is overdue. Please extend it before add
+                new task.
+              </Alert>
+            ) : (
+              ""
+            )}
             <TextField
               required
               id="outlined-basic"
@@ -83,53 +129,75 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
               sx={{ width: "400px" }}
               onChange={handleSetTask}
               helperText={
-                newTask.name === undefined ? "Please fill in this field!" : ""
-              }
-            />
-
-            <label htmlFor="start-date">Start Date:</label>
-            <TextField
-              required
-              id="outlined-basic"
-              name="startDate"
-              // label="Start Date"
-              variant="outlined"
-              type="date"
-              placeholder="dd/mm/yyyy"
-              sx={{ width: "200px", marginRight: "10px" }}
-              onChange={handleSetTask}
-              helperText={
-                newTask.startDate === undefined
+                checkInValid(newTask.name, "text")
                   ? "Please fill in this field!"
                   : ""
               }
             />
 
-            <label htmlFor="end-date">End Date</label>
-            <TextField
-              required
-              id="outlined-basic"
-              name="endDate"
-              // label="End Date"
-              variant="outlined"
-              sx={{ width: "200px" }}
-              type="date"
-              placeholder="dd/mm/yyyy"
-              onChange={handleSetTask}
-              helperText={
-                newTask["end-date"] === undefined
-                  ? "Please fill in this field!"
-                  : ""
-              }
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <label>Note: End Date isn't after Start Date.</label>
+              <DatePicker
+                required
+                label="Start Date"
+                id="startDate"
+                name="startDate"
+                sx={{ minWidth: "200px", marginTop: "12px" }}
+                format="DD-MM-YYYY"
+                minDate={today}
+                maxDate={FindMaxDate()}
+                onChange={(value) => {
+                  if (value)
+                    handleSetDate("startDate", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(newTask.startDate, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
+              />
+
+              <DatePicker
+                required
+                label="End Date"
+                id="endDate"
+                name="endDate"
+                sx={{ minWidth: "200px", marginTop: "12px" }}
+                format="DD-MM-YYYY"
+                minDate={FindMinDate()}
+                maxDate={endDateProject}
+                onChange={(value) => {
+                  if (value)
+                    handleSetDate("endDate", value.format("YYYY-MM-DD"));
+                }}
+                slotProps={{
+                  textField: {
+                    helperText: `${
+                      checkInValid(newTask.endDate, "date")
+                        ? "Please fill in this field!"
+                        : ""
+                    }`,
+                  },
+                }}
+              />
+            </LocalizationProvider>
 
             <div>
               <label>Status: </label>
               <Chip
-                label={newTask.startDate ? checkStatus() : "Not Started"}
+                label={
+                  checkInValid(newTask.startDate)
+                    ? checkStatus()
+                    : "Not Started"
+                }
                 sx={{
                   backgroundColor:
-                    newTask.startDate && checkStatus() === "In Progress"
+                    checkInValid(newTask.startDate) &&
+                    checkStatus() === "In Progress"
                       ? "#6ac5fe"
                       : "#fff444",
                 }}
@@ -142,6 +210,7 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
       <DialogActions>
         <Button onClick={handleCloseAddTask}>Cancel</Button>
         <Button
+          disabled={checkEmpty()}
           onClick={() => {
             handleAddTask();
           }}

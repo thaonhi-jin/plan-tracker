@@ -41,8 +41,10 @@ function Chart() {
 
   const dataAggregation = () => {
     let date = moment().startOf("week");
+    if (moment().toString().slice(0, 3) === "Sun") date.subtract(1, "weeks");
     let data = weekdays.map((weekday) => {
       date = date.add(1, "days");
+      // console.log(date.format("YYYY-MM-DD"));
       return {
         weekday: weekday,
         Uncompleted: taskCountByDate(
