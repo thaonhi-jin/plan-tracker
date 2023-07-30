@@ -69,7 +69,7 @@ export const NotificationCard = styled(Card)({
     width: "300px",
     marginLeft: "20px",
     height: "410px",
-    padding: "15px",
+    padding: "5px 15px",
     "::-webkit-scrollbar": {
         width: "0",
     },

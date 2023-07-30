@@ -12,6 +12,7 @@ import {
   Chip,
   Alert,
 } from "@mui/material";
+import SaveIcon from "@mui/icons-material/Save";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -216,8 +217,13 @@ function EditTask({ openEdit, setOpenEdit, setAnchorElUser, task }) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseEdit}>Cancel</Button>
+        <Button sx={{ color: "#555555" }} onClick={handleCloseEdit}>
+          Cancel
+        </Button>
         <Button
+          startIcon={<SaveIcon />}
+          variant="outlined"
+          sx={{ color: "#0DA2FF" }}
           disabled={checkEmpty()}
           onClick={() => {
             handleEditTask();

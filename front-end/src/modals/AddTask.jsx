@@ -12,6 +12,7 @@ import {
   Chip,
   Alert,
 } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -208,8 +209,13 @@ function AddTask({ openAddTask, setOpenAddTask, projectID }) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseAddTask}>Cancel</Button>
+        <Button sx={{ color: "#555555" }} onClick={handleCloseAddTask}>
+          Cancel
+        </Button>
         <Button
+          startIcon={<AddCircleOutlineIcon />}
+          variant="outlined"
+          sx={{ color: "#0DA2FF" }}
           disabled={checkEmpty()}
           onClick={() => {
             handleAddTask();

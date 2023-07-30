@@ -13,6 +13,7 @@ import {
   Stack,
   Chip,
 } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -224,26 +225,32 @@ function AddProject({ openAdd, setOpenAdd }) {
                 }}
               />
             </LocalizationProvider>
-
-            <label>Status: </label>
-            <Chip
-              label={
-                checkDateExisted()
-                  ? checkProjectStatus(
-                      newProject.startDate,
-                      newProject.endDate,
-                      newProject.deadline,
-                      []
-                    )
-                  : "Please fill in dates!"
-              }
-            />
+            <div>
+              <label>Status: </label>
+              <Chip
+                label={
+                  checkDateExisted()
+                    ? checkProjectStatus(
+                        newProject.startDate,
+                        newProject.endDate,
+                        newProject.deadline,
+                        []
+                      )
+                    : "Please fill in dates!"
+                }
+              />
+            </div>
           </Stack>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseAdd}>Cancel</Button>
+        <Button sx={{ color: "#555555" }} onClick={handleCloseAdd}>
+          Cancel
+        </Button>
         <Button
+          startIcon={<AddCircleOutlineIcon />}
+          variant="outlined"
+          sx={{ color: "#0DA2FF" }}
           disabled={checkEmpty()}
           onClick={() => {
             handleAddProject();

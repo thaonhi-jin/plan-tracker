@@ -28,6 +28,7 @@
 
 .notification {
   flex: 1;
+  width: 300px;
 }
 
 /* Task Lists */

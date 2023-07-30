@@ -18,6 +18,7 @@ import TimelineIcon from "@mui/icons-material/Timeline";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 import TodayIcon from "@mui/icons-material/Today";
 import { ProjectsCount } from "../../redux/methods";
 import { useSelector, useDispatch } from "react-redux";
@@ -31,8 +32,10 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const today = moment().format("ddd MMMM Do, YYYY");
-  console.log("DB1");
-  console.log(infoProjects);
+  const currTime = moment().hour();
+
+  // console.log("DB1");
+  // console.log(infoProjects);
 
   useEffect(() => {
     setLoading(true);
@@ -73,7 +76,11 @@ function Dashboard() {
             label={today}
             variant="outlined"
           />
-          <LightModeIcon fontSize="large" sx={{ color: "#73C2FB" }} />
+          {currTime >= 6 && currTime < 18 ? (
+            <LightModeIcon fontSize="large" sx={{ color: "#73C2FB" }} />
+          ) : (
+            <DarkModeIcon fontSize="medium" sx={{ color: "#73C2FB" }} />
+          )}
         </DateBox>
       </div>
 

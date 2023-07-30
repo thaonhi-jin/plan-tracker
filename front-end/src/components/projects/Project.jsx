@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateActiveTasks } from "../../redux/cacheSlice";
-import { readData } from "../../data/CRUD";
+import axios from "axios";
 import ProjectCard from "./ProjectCard";
 import Tasks from "./Tasks";
 
@@ -22,7 +22,7 @@ function Project() {
       setLoading(true);
       let url = `http://localhost:1337/api/projects/${activeProject.id}?populate=*`;
       try {
-        const res = await readData(url);
+        const res = await axios.get(url);
         dispatch(updateActiveTasks(res.data.data));
         console.log("here3");
         setLoading(false);
