@@ -24,12 +24,24 @@ export const SideBarContent = styled(List)({
     overflowY: "scroll",
 })
 
+export const LogoAppContainer = styled(ListItem)({
+    padding: "16px 10px",
+    width: "230px",
+    maxWidth: "250px",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    backgroundColor: "#00024C",
+    zIndex: 3000,
+    height: "95px",
+})
+
 export const LogoApp = styled(Box)({
     width: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "10px 0",
+    padding: "20px 0",
 })
 
 export const LogoIcon = styled(AdbIcon)({
@@ -55,9 +67,13 @@ export const LogoTitle = styled(Typography)({
 })
 
 export const ProjectList = styled(ListItem)({
-    padding: "4px 16px",
-    marginBottom: "15px",
-    marginTop: "10px",
+    position: 'fixed',
+    top: 95,
+    left: 0,
+    backgroundColor: "#00024C",
+    zIndex: 4000,
+    width: 250,
+    padding: "14px 16px 0px 16px",
 })
 
 export const AllProjectBox = styled(Box)({

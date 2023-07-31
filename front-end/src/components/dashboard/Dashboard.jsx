@@ -54,7 +54,7 @@ function Dashboard() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div style={{ height: "300px" }}>
       <div className="header">
         <Box>
           <WelcomeTypo color="text.secondary">

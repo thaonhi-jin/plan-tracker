@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { Line } from "recharts";
 
 export const WelcomeTypo = styled(Typography)({
     fontSize: 18,
@@ -17,7 +18,7 @@ export const HeaderTypo = styled(Typography)({
 export const DateBox = styled(Box)({
     display: "flex",
     alignItems: "center",
-    marginRight: "100px",
+    marginRight: "30px",
     gap: "15px",
 })
 
@@ -53,9 +54,8 @@ export const WidgetIcon = styled(Box)({
 // Chart
 export const ChartCard = styled(Card)({
     width: "fit-content",
-    paddingLeft: "15px",
-    paddingRight: "65px",
-    marginLeft: "35px",
+    paddingRight: "50px",
+    marginLeft: "15px",
 })
 
 export const ChartTitle = styled(Typography)({
@@ -66,14 +66,32 @@ export const ChartTitle = styled(Typography)({
 
 // Notification
 export const NotificationCard = styled(Card)({
-    width: "300px",
-    marginLeft: "20px",
-    height: "410px",
-    padding: "5px 15px",
+    maxWidth: "340px",
+    height: "443px",
+
     "::-webkit-scrollbar": {
         width: "0",
     },
     overflowY: "scroll",
+    position: 'relative'
+})
+
+export const NotiHeader = styled(Box)({
+    textAlign: "center",
+    backgroundColor: "#fff",
+    width: "340px",
+    height: "70px",
+    padding: "30px 0 0 0",
+    zIndex: "3000",
+    position: "sticky",
+    top: "0",
+})
+
+export const NotiList = styled(List)({
+    width: "100%",
+    maxWidth: "310px",
+    bgcolor: "background.paper",
+    padding: "0 15px",
 })
 
 export const CartSubTitle = styled(Typography)({

@@ -8,12 +8,18 @@ import {
   Paper,
   Chip,
   ListSubheader,
+  Box,
 } from "@mui/material";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { useDispatch, useSelector } from "react-redux";
 import { WarningProjectsFilter, daysleftCount } from "../../redux/methods";
 import { setProjectActive } from "../../redux/cacheSlice";
-import { CartSubTitle, NotificationCard } from "./styles/dashboardStyles";
+import {
+  CartSubTitle,
+  NotiHeader,
+  NotiList,
+  NotificationCard,
+} from "./styles/dashboardStyles";
 import dayjs from "dayjs";
 
 function Notification() {
@@ -29,20 +35,13 @@ function Notification() {
 
   return (
     <NotificationCard>
-      <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        <ListSubheader sx={{ textAlign: "center" }}>
-          <Badge
-            sx={{ color: "#1AA8E9" }}
-            badgeContent={warningProjects.length}
-          >
-            <NotificationsActiveIcon
-              fontSize="large"
-              sx={{ color: "#01058A" }}
-            />
-          </Badge>
-          <CartSubTitle>Deadline is due soon</CartSubTitle>
-        </ListSubheader>
-
+      <NotiHeader>
+        <Badge sx={{ color: "#1AA8E9" }} badgeContent={warningProjects.length}>
+          <NotificationsActiveIcon fontSize="large" sx={{ color: "#01058A" }} />
+        </Badge>
+        <CartSubTitle>Deadline is due soon</CartSubTitle>
+      </NotiHeader>
+      <NotiList sx={{}}>
         {warningProjects.length > 0
           ? warningProjects.sort(compareDaysLeft).map((project) => (
               <Paper key={project.id} elevation={1} sx={{ margin: "15px 0" }}>
@@ -72,7 +71,7 @@ function Notification() {
               </Paper>
             ))
           : ""}
-      </List>
+      </NotiList>
     </NotificationCard>
   );
 }

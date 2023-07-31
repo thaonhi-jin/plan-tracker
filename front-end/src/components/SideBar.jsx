@@ -15,6 +15,7 @@ import {
   AllProjectBox,
   AllProjectContent,
   LogoApp,
+  LogoAppContainer,
   LogoIcon,
   LogoTitle,
   ProjectItem,
@@ -36,14 +37,14 @@ function Sidebar() {
   return (
     <SideBar container={window.document.body} variant="permanent" open={true}>
       <SideBarContent disablePadding>
-        <ListItem sx={{ padding: "16px 8px" }}>
+        <LogoAppContainer>
           <LogoApp>
             <LogoIcon />
             <LogoTitle variant="h4" noWrap component="a" href="/">
               Plan Tracker
             </LogoTitle>
           </LogoApp>
-        </ListItem>
+        </LogoAppContainer>
         <ProjectList>
           <AllProjectBox>
             <AllProjectContent variant="body2">
@@ -55,7 +56,7 @@ function Sidebar() {
           </AllProjectBox>
         </ProjectList>
         <Collapse in={true} timeout="auto" unmountOnExit>
-          <List sx={{ padding: "0" }}>
+          <List sx={{ padding: "0", marginTop: "160px" }}>
             {infoProjects
               ? infoProjects.map((project) => (
                   <ProjectItem

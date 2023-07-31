@@ -36,7 +36,7 @@ function Project() {
 
   if (loading) return <p>Loading...</p>;
   return (
-    <div>
+    <div style={{ height: "300px" }}>
       <ProjectCard />
       <Tasks />
     </div>

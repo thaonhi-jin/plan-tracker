@@ -21,6 +21,7 @@ import {
   TaskBoard,
   WarningNoti,
   LeftTimeLineItem,
+  BoardHeader,
 } from "./styles/taskListStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { checkTaskStatus, daysleftCount } from "../../redux/methods";
@@ -79,14 +80,14 @@ function TaskList() {
     <div className="task-lists">
       {/* Past - Not Completed */}
       <TaskBoard>
-        <Box>
+        <BoardHeader>
           <BoardTitle variant="h6" component="div">
             Past
           </BoardTitle>
           <BoardSubTitle color="text.secondary">
             You haven't done {pastTasks.length} tasks yet
           </BoardSubTitle>
-        </Box>
+        </BoardHeader>
 
         <Stack sx={{ width: "100%" }}>
           {(pastTasks || []).sort(compareDaysLeft).map((task) => (
@@ -135,16 +136,16 @@ function TaskList() {
 
       {/* Today */}
       <TaskBoard>
-        <Box>
+        <BoardHeader>
           <BoardTitle variant="h6" component="div">
             Today
           </BoardTitle>
           <BoardSubTitle color="text.secondary">
             You have {todayTasks.length} tasks for today
           </BoardSubTitle>
-        </Box>
+        </BoardHeader>
 
-        <Timeline sx={{ margin: "10px 25px" }}>
+        <Timeline sx={{ margin: "5px 25px 15px 25px", paddingTop: 0 }}>
           {(todayTasks || []).sort(compareDaysLeft).map((task, index) => (
             <LeftTimeLineItem key={index}>
               <TimelineSeparator>
@@ -190,16 +191,16 @@ function TaskList() {
 
       {/* Future */}
       <TaskBoard>
-        <Box>
+        <BoardHeader>
           <BoardTitle variant="h6" component="div">
             Future
           </BoardTitle>
           <BoardSubTitle color="text.secondary">
             You have {futureTasks.length} upcoming tasks
           </BoardSubTitle>
-        </Box>
+        </BoardHeader>
 
-        <Timeline sx={{ margin: "10px 25px" }}>
+        <Timeline sx={{ margin: "5px 25px 15px 25px", paddingTop: 0 }}>
           {(futureTasks || []).sort(compareDaysLeft).map((task, index) => (
             <LeftTimeLineItem key={index}>
               <TimelineSeparator>
