@@ -4,6 +4,7 @@ import { updateInfoList, setOpenDashboard } from './redux/cacheSlice';
 import Sidebar from "./components/SideBar";
 import Project from "./components/projects/Project";
 import Dashboard from "./components/dashboard/Dashboard";
+import DashBoardSkeleton from "./components/skeleton/DashBoardSkeleton";
 import axios from "axios";
 import { checkTaskStatus, checkProjectStatus } from "./redux/methods";
 
@@ -118,7 +119,7 @@ function App() {
   }, [])
 
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <DashBoardSkeleton />
   return (
     <div className="App" style={{ paddingLeft: "250px", boxSizing: "border-box" }}>
       {/* {console.log("here")} */}

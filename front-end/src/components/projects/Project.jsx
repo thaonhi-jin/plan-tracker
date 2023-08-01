@@ -4,6 +4,7 @@ import { updateActiveTasks } from "../../redux/cacheSlice";
 import axios from "axios";
 import ProjectCard from "./ProjectCard";
 import Tasks from "./Tasks";
+import ProjectSkeleton from "../skeleton/ProjectSkeleton";
 
 function Project() {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ function Project() {
     fetchData();
   }, [activeProject]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <ProjectSkeleton />;
   return (
     <div style={{ height: "300px" }}>
       <ProjectCard />

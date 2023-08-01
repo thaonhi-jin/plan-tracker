@@ -1,0 +1,36 @@
+.home-page {
+  display: flex;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dateBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 30px;
+}
+
+.overview {
+  gap: 25px;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+}
+
+.widgets {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  height: fit-content;
+}
+
+.taskList {
+  display: flex;
+  justify-content: space-evenly;
+}
