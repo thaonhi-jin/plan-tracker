@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { Card, CardContent, List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { Line } from "recharts";
 
 export const WelcomeTypo = styled(Typography)({
     fontSize: 18,
@@ -23,7 +22,8 @@ export const DateBox = styled(Box)({
 })
 
 export const Widget = styled(Card)({
-    maxWidth: 200,
+    // maxWidth: 200,
+    width: 250,
     flex: 1,
     margin: "0px 20px",
     padding: "10px",
@@ -54,7 +54,8 @@ export const WidgetIcon = styled(Box)({
 // Chart
 export const ChartCard = styled(Card)({
     width: "fit-content",
-    paddingRight: "50px",
+    paddingLeft: "27px",
+    paddingRight: "78px",
     marginLeft: "15px",
 })
 
@@ -82,7 +83,7 @@ export const NotiHeader = styled(Box)({
     width: "340px",
     height: "70px",
     padding: "30px 0 0 0",
-    zIndex: "3000",
+    zIndex: "300",
     position: "sticky",
     top: "0",
 })

@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  IconButton,
-  Collapse,
-  List,
-  ListItem,
-  ListItemIcon,
-} from "@mui/material";
+import { IconButton, Collapse, List, ListItemIcon } from "@mui/material";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import { useSelector, useDispatch } from "react-redux";
 import { setProjectActive } from "../redux/cacheSlice";

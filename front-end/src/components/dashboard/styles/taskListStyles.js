@@ -14,7 +14,7 @@ export const TaskBoard = styled(Card)({
 export const BoardHeader = styled(Box)({
     padding: "15px 0",
     backgroundColor: "#fff",
-    zIndex: "3000",
+    zIndex: "300",
     position: "sticky",
     top: "0",
 })
